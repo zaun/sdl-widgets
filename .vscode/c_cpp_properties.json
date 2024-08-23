@@ -1,0 +1,16 @@
+{
+  "configurations": [
+    {
+      "name": "engine",
+      "includePath": [
+        "${workspaceFolder}/platforms/include/**",
+        "${workspaceFolder}/src/include/**",
+        "${workspaceFolder}/build/_deps/*-src/lib/**",
+        "${workspaceFolder}/build/_deps/*-src/include/**",
+        "${workspaceFolder}/build/_deps/*-src/**",
+        "${workspaceFolder}/build/_deps/*-build/include/**"
+      ]
+    }
+  ],
+  "version": 4
+}
