@@ -12,7 +12,7 @@ namespace SGI {
   {
     std::shared_ptr<FlatButton> widget = std::make_shared<FlatButton>(FlatButton());
     widget->_self = widget;
-    widget->setConstraintFixed(SGI::Widget::ConstraintType::Width, 110);
+    widget->setConstraintFixed(SGI::Widget::ConstraintType::Width, 100);
     widget->setConstraintFixed(SGI::Widget::ConstraintType::Height, 36);
     widget->setPadding(12, 12, 6, 6);
 

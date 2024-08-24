@@ -35,8 +35,10 @@ namespace SGI {
 
     enum SidebarState {
       CLOSED,
+      LEFT_CLOSING,
       LEFT_OPENING,
       LEFT_OPEN,
+      RIGHT_CLOSING,
       RIGHT_OPENING,
       RIGHT_OPEN,
     };
@@ -65,7 +67,11 @@ namespace SGI {
 
     std::shared_ptr<SDL_Window> getWindow();
 
+    void closeSidebar();
+
     void openSidebar();
+
+    bool isSidebarOpen();
 
     bool processEvent(const SDL_Event *event) override;
 

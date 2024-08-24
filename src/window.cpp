@@ -68,6 +68,7 @@ namespace SGI {
     _sidebarBounds.y = 0;
     _sidebarContainer->_setBounds(_sidebarBounds);
     _sidebarContainer->setPadding(0, 0, 0, 0);
+    _sidebarContainer->_renderer = _renderer;
 
     _resourcePath = SDL_GetBasePath();
   };
@@ -151,8 +152,26 @@ namespace SGI {
 
   void Window::openSidebar()
   {
-    _sidebarState = SidebarState::LEFT_OPENING;
-    LOG(WINDOW, "Sidebar opening");
+    if (_sidebarState == SidebarState::CLOSED) {
+      _sidebarState = SidebarState::LEFT_OPENING;
+      LOG(WINDOW, "Sidebar opening");
+    }
+  }
+
+  void Window::closeSidebar()
+  {
+    if (_sidebarState == SidebarState::LEFT_OPEN || _sidebarState == SidebarState::LEFT_OPENING) {
+      _sidebarState = SidebarState::LEFT_CLOSING;
+      LOG(WINDOW, "Sidebar closing");
+    } else if (_sidebarState == SidebarState::RIGHT_OPEN || _sidebarState == SidebarState::RIGHT_OPENING) {
+      _sidebarState = SidebarState::RIGHT_CLOSING;
+      LOG(WINDOW, "Sidebar closing");
+    }
+  }
+
+  bool Window::isSidebarOpen()
+  {
+    return _sidebarState != SidebarState::CLOSED;
   }
 
   bool Window::processEvent(const SDL_Event *event)
@@ -189,7 +208,7 @@ namespace SGI {
     }
     _lastRenderCount = current;
 
-    _render(dt / 1000.0);
+    Window::_render(dt / 1000.0);
 
     if (present) {
       SDL_RenderPresent(getRenderer().get());
@@ -341,7 +360,7 @@ namespace SGI {
       _sidebarBounds.x = -_sidebarBounds.w;
     } else if (_sidebarState == SidebarState::LEFT_OPEN) {
       _sidebarBounds.x = _sidebarBounds.w;
-    } else if (_sidebarState == SidebarState::LEFT_OPEN) {
+    } else if (_sidebarState == SidebarState::RIGHT_OPEN) {
       _sidebarBounds.x = _bounds.w - _sidebarBounds.w;
     }
 
@@ -356,8 +375,9 @@ namespace SGI {
 
     Container::_render(deltaTime);
     Container::_renderOverlay(deltaTime);
+
     if (_sidebarState == SidebarState::LEFT_OPENING) {
-      _sidebarBounds.x += 10 * deltaTime;
+      _sidebarBounds.x += 1500 * deltaTime;
       if (_sidebarBounds.x >= 0) {
         _sidebarBounds.x = 0;
         _sidebarState = SidebarState::LEFT_OPEN;
@@ -365,6 +385,17 @@ namespace SGI {
       }
       _sidebarContainer->_setBounds(_sidebarBounds);
     }
+
+    if (_sidebarState == SidebarState::LEFT_CLOSING) {
+      _sidebarBounds.x -= 1500 * deltaTime;
+      if (_sidebarBounds.x <= -_sidebarBounds.w) {
+        _sidebarBounds.x = -_sidebarBounds.w;
+        _sidebarState = SidebarState::CLOSED;
+        LOG(WINDOW, "Sidebar closed");
+      }
+      _sidebarContainer->_setBounds(_sidebarBounds);
+    }
+
     if (_sidebarState != SidebarState::CLOSED) {
       _sidebarContainer->_render(deltaTime);
       _sidebarContainer->_renderOverlay(deltaTime);

@@ -93,6 +93,8 @@ namespace SGI {
 
     SDL_Rect ca = getContentArea();
     _video->render(getRenderer().get(), ca);
+
+    SDL_SetRenderClipRect(getRenderer().get(), nullptr);
   }
 
 }

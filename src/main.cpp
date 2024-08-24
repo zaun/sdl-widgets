@@ -59,7 +59,6 @@ int main(int argc, char* args[]) {
   sidebar->setDirection(SGI::Container::ChildDirection::Column);
   sidebar->setSpacing(SGI::Container::ChildSpacing::Around);
   win->getSidebar()->addChild(sidebar);
-  win->openSidebar();
 
   SGI::FlatPanelPtr sectionA = SGI::FlatPanel::create();
   sectionA->setName("sectionA");
@@ -107,7 +106,6 @@ int main(int argc, char* args[]) {
 
   SGI::FlatPanelPtr sectionA2 = SGI::FlatPanel::create();
   sectionA2->setName("sectionA");
-  sectionA2->setConstraintFixed(SGI::Widget::ConstraintType::Width, 400);
   sectionA2->setConstraintFixed(SGI::Widget::ConstraintType::Height, 50);
   sectionA2->setSpacing(SGI::Container::ChildSpacing::Around);
   sectionA->addChild(sectionA2);
@@ -166,10 +164,18 @@ int main(int argc, char* args[]) {
   });
   sectionA2->addChild(b2);
 
-  SGI::FlatButtonPtr b3 = SGI::FlatButton::create("Play Video");
+  SGI::FlatButtonPtr b3 = SGI::FlatButton::create("Open Sidebar");
   b3->setName("b3");
+  b3->setConstraintFixed(SGI::Widget::ConstraintType::Width, 130);
   b3->addMouseListener(SGI::Widget::MouseEventType::Click, [](SGI::WindowPtr window, SGI::WidgetPtr widget, uint8_t button)->bool {
     SGI::FlatButtonPtr btn = std::dynamic_pointer_cast<SGI::FlatButton>(widget);
+    if (window->isSidebarOpen()) {
+      window->closeSidebar();
+      btn->setLabel("Open Sidebar");
+    } else {
+      window->openSidebar();
+      btn->setLabel("Close Sidebar");
+    }
     return false;
   });
   sectionA2->addChild(b3);
