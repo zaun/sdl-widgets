@@ -9,8 +9,8 @@ namespace SGI {
   std::shared_ptr<FlatPanel> FlatPanel::create()
   {
     std::shared_ptr<FlatPanel> widget = std::make_shared<FlatPanel>(FlatPanel());
-    widget.get()->_self = widget;
-    widget.get()->setPadding(10, 10, 10, 10);
+    widget->_self = widget;
+    widget->setPadding(10, 10, 10, 10);
 
     return widget;
   }
@@ -40,8 +40,8 @@ namespace SGI {
   void FlatPanel::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _borderColor = theme.primaryBorder;
-    _fillColor = theme.primaryFill;
+    _borderColor = theme.primary.borderColor;
+    _fillColor = theme.primary.backgroundColor;
   }
   
   void FlatPanel::_render(double deltaTime)

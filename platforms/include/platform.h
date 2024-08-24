@@ -1,6 +1,7 @@
 #ifndef SGI_PLATFORM_H
 #define SGI_PLATFORM_H
 
+#include <functional>
 #include <SDL3/SDL.h>
 #include <string>
 #include <vector>
@@ -21,6 +22,7 @@ namespace SGI {
           void seek(double seconds);
           double getDuration() const;
           double getCurrentTime() const;
+          void setLocationCallback(std::function<void(float currentTime, float maxTime)> callback);
           void setRepeat(bool value);
           void render(SDL_Renderer* renderer, SDL_Rect& contentArea);
 

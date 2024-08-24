@@ -10,8 +10,8 @@ namespace SGI {
   std::shared_ptr<Panel> Panel::create()
   {
     std::shared_ptr<Panel> widget = std::make_shared<Panel>(Panel());
-    widget.get()->_self = widget;
-    widget.get()->setPadding(10, 10, 10, 10);
+    widget->_self = widget;
+    widget->setPadding(10, 10, 10, 10);
 
     return widget;
   }
@@ -28,7 +28,7 @@ namespace SGI {
     }
 
     if (!_backgroundTexture.empty()) {
-      _root.get()->renderTexture(_backgroundTexture, SDL_FRect{(float)_bounds.x, (float)_bounds.y, (float)_bounds.w, (float)_bounds.h});
+      _root->renderTexture(_backgroundTexture, SDL_FRect{(float)_bounds.x, (float)_bounds.y, (float)_bounds.w, (float)_bounds.h});
     }
 
     Container::_render(deltaTime);

@@ -11,10 +11,10 @@ namespace SGI {
   std::shared_ptr<FlatSelect> FlatSelect::create()
   {
     std::shared_ptr<FlatSelect> widget = std::make_shared<FlatSelect>(FlatSelect());
-    widget.get()->_self = widget;
-    widget.get()->setConstraintFixed(SGI::Widget::ConstraintType::Height, 36);
-    widget.get()->setConstraintAuto(SGI::Widget::ConstraintType::Width);
-    widget.get()->setPadding(12, 12, 6, 6);
+    widget->_self = widget;
+    widget->setConstraintFixed(SGI::Widget::ConstraintType::Height, 36);
+    widget->setConstraintAuto(SGI::Widget::ConstraintType::Width);
+    widget->setPadding(12, 12, 6, 6);
 
     return widget;
   }
@@ -151,6 +151,7 @@ namespace SGI {
   void FlatSelect::setOptions(const std::vector<std::string>& options)
   {
     _options = options;
+    setValue(_options[0]);
     _updateOptionsLadel();
   }
 
@@ -173,9 +174,9 @@ namespace SGI {
   void FlatSelect::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _textColor = theme.primaryText;
-    _borderColor = theme.primaryBorder;
-    _fillColor = theme.primaryFill;
+    _textColor = theme.primary.textColor;
+    _borderColor = theme.primary.borderColor;
+    _fillColor = theme.primary.fillColor;
     _updateLabel();
     _updateOptionsLadel();
   }

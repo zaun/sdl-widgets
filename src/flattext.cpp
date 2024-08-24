@@ -13,7 +13,7 @@ namespace SGI {
   std::shared_ptr<FlatText> FlatText::create()
   {
     std::shared_ptr<FlatText> widget = std::make_shared<FlatText>(FlatText());
-    widget.get()->_self = widget;
+    widget->_self = widget;
 
     return widget;
   }
@@ -21,7 +21,7 @@ namespace SGI {
   std::shared_ptr<FlatText> FlatText::create(std::string value)
   {
     std::shared_ptr<FlatText> widget = FlatText::create();
-    widget.get()->setValue(value);
+    widget->setValue(value);
 
     return widget;
   }
@@ -80,7 +80,7 @@ namespace SGI {
   void FlatText::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _textColor = theme.primaryText;
+    _textColor = theme.primary.textColor;
     _createTokens(_value, _textColor, {0, 0, 0, 0}, _fontName, _fontSize);
     _updateContent();
   }

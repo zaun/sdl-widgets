@@ -12,7 +12,7 @@ namespace SGI {
 
   void Container::addChild(WidgetPtr widget)
   {
-    if (widget.get()->_root != nullptr) {
+    if (widget->_root != nullptr) {
       ERROR(WIDGET, "Can't add widget to more than one window.");
       return;
     }
@@ -20,9 +20,9 @@ namespace SGI {
     auto it = std::find(_children.begin(), _children.end(), widget);
     if (it == _children.end()) {
       _children.push_back(widget);
-      widget.get()->_renderer = _renderer;
-      widget.get()->_root = _root;
-      LOG(CONTAINER, "Added child %s to %s", widget.get()->getName().c_str(), getName().c_str());
+      widget->_renderer = _renderer;
+      widget->_root = _root;
+      LOG(CONTAINER, "Added child %s to %s", widget->getName().c_str(), getName().c_str());
       _calculateChildrenBounds();
 
       if (auto flatWidget = std::dynamic_pointer_cast<Flat>(widget)) {
@@ -57,10 +57,10 @@ namespace SGI {
     bool overChild = false;
 
     for (size_t i = 0; i < _children.size(); ++i) {
-      if(_children[i].get()->processEvent(event)) {
+      if(_children[i]->processEvent(event)) {
         stop = true;
       }
-      if (_children[i].get()->_mouseOver) {
+      if (_children[i]->_mouseOver) {
         overChild = true;
       }
     }
@@ -92,8 +92,8 @@ namespace SGI {
     auto it = std::find(_children.begin(), _children.end(), widget);
     if (it != _children.end()) {
       _children.erase(it);
-      widget.get()->_renderer = nullptr;
-      widget.get()->_root = nullptr;
+      widget->_renderer = nullptr;
+      widget->_root = nullptr;
     }
   }
 
@@ -171,16 +171,16 @@ namespace SGI {
     int widthZero = 0;
     int heightZero = 0;
     for (size_t i = 0; i < numChildren; ++i) {
-      _children[i].get()->_bounds.x = 0;
-      _children[i].get()->_bounds.y = 0;
-      _children[i].get()->_bounds.w = _children[i].get()->_constraints.width.minValue;
-      _children[i].get()->_bounds.h = _children[i].get()->_constraints.height.minValue;
-      widthLeft -= _children[i].get()->_bounds.w;
-      heightLeft -=_children[i].get()->_bounds.h;
-      if (_children[i].get()->_bounds.w == 0) {
+      _children[i]->_bounds.x = 0;
+      _children[i]->_bounds.y = 0;
+      _children[i]->_bounds.w = _children[i]->_constraints.width.minValue;
+      _children[i]->_bounds.h = _children[i]->_constraints.height.minValue;
+      widthLeft -= _children[i]->_bounds.w;
+      heightLeft -=_children[i]->_bounds.h;
+      if (_children[i]->_bounds.w == 0) {
         widthZero += 1;
       }
-      if (_children[i].get()->_bounds.h == 0) {
+      if (_children[i]->_bounds.h == 0) {
         heightZero += 1;
       }
     }
@@ -189,11 +189,11 @@ namespace SGI {
     int avgWidth = (widthLeft - minSpaceing) / widthZero;
     int avgHeight = (heightLeft - minSpaceing) / heightZero;
     for (size_t i = 0; i < numChildren; ++i) {
-      if (_children[i].get()->_bounds.w == 0) {
-        _children[i].get()->_bounds.w = avgWidth < _children[i].get()->_constraints.width.maxValue ? avgWidth : _children[i].get()->_constraints.width.maxValue;
+      if (_children[i]->_bounds.w == 0) {
+        _children[i]->_bounds.w = avgWidth < _children[i]->_constraints.width.maxValue ? avgWidth : _children[i]->_constraints.width.maxValue;
       }
-      if (_children[i].get()->_bounds.h == 0) {
-        _children[i].get()->_bounds.h = avgHeight < _children[i].get()->_constraints.height.maxValue ? avgHeight : _children[i].get()->_constraints.height.maxValue;
+      if (_children[i]->_bounds.h == 0) {
+        _children[i]->_bounds.h = avgHeight < _children[i]->_constraints.height.maxValue ? avgHeight : _children[i]->_constraints.height.maxValue;
       }
     }
     
@@ -207,7 +207,7 @@ namespace SGI {
     for (size_t i = 0; i < numChildren; ++i) {
       if (dynamic_cast<Container*>(_children[i].get())) {
         std::shared_ptr<Container> child = std::static_pointer_cast<Container>(_children[i]);
-        child.get()->_calculateChildrenBounds();
+        child->_calculateChildrenBounds();
       }
     }
   }
@@ -233,7 +233,7 @@ namespace SGI {
     // Children are expected to be reset already
     unsigned int contentWidth = 0;
     for (size_t i = 0; i < numChildren; ++i) {
-      contentWidth += _children[i].get()->_bounds.w;
+      contentWidth += _children[i]->_bounds.w;
     }
     if (_spacingType == ChildSpacing::Around) {
       contentWidth += (numChildren + 1) * _spacing;
@@ -256,22 +256,22 @@ namespace SGI {
 
         for (size_t i = 0; i < numChildren; ++i) {
           bool didGrow = false;
-          if (_children[i].get()->_bounds.w + growBy <= _children[i].get()->_constraints.width.maxValue &&
-              contentWidth + _children[i].get()->_bounds.w + growBy <= parentWidth) {
-            _children[i].get()->_bounds.w += growBy;
+          if (_children[i]->_bounds.w + growBy <= _children[i]->_constraints.width.maxValue &&
+              contentWidth + _children[i]->_bounds.w + growBy <= parentWidth) {
+            _children[i]->_bounds.w += growBy;
             didGrow = true;
-          } else if (_children[i].get()->_bounds.w + growBy > _children[i].get()->_constraints.width.maxValue &&
-                    _children[i].get()->_bounds.w < _children[i].get()->_constraints.width.maxValue &&
-                    contentWidth + _children[i].get()->_constraints.width.maxValue <= parentWidth) {
-            _children[i].get()->_bounds.w = _children[i].get()->_constraints.width.maxValue;
+          } else if (_children[i]->_bounds.w + growBy > _children[i]->_constraints.width.maxValue &&
+                    _children[i]->_bounds.w < _children[i]->_constraints.width.maxValue &&
+                    contentWidth + _children[i]->_constraints.width.maxValue <= parentWidth) {
+            _children[i]->_bounds.w = _children[i]->_constraints.width.maxValue;
           }
 
-          contentWidth += _children[i].get()->_bounds.w;
+          contentWidth += _children[i]->_bounds.w;
           if (i != 0 || _spacingType == ChildSpacing::Around) {
             contentWidth += _spacing;
           }
 
-          if (didGrow && _children[i].get()->_bounds.w < _children[i].get()->_constraints.width.maxValue && contentWidth < parentWidth) {
+          if (didGrow && _children[i]->_bounds.w < _children[i]->_constraints.width.maxValue && contentWidth < parentWidth) {
             canGrowWidth = true;
           }
         }
@@ -296,7 +296,7 @@ namespace SGI {
         }
 
         for (size_t i = 0; i < numChildren; ++i) {
-          contentWidth += _children[i].get()->_bounds.w;
+          contentWidth += _children[i]->_bounds.w;
           if (i != 0 || _spacingType == ChildSpacing::Around) {
             contentWidth += _spacing;
           }
@@ -315,24 +315,24 @@ namespace SGI {
     }
 
     for (size_t i = 0; i < numChildren; ++i) {
-      _children[i].get()->_bounds.h = parentHeight > _children[i].get()->_constraints.height.maxValue ? _children[i].get()->_constraints.height.maxValue : parentHeight;
+      _children[i]->_bounds.h = parentHeight > _children[i]->_constraints.height.maxValue ? _children[i]->_constraints.height.maxValue : parentHeight;
 
       if (i == 0) {
-        _children[i].get()->_bounds.x = _contentArea.x;
+        _children[i]->_bounds.x = _contentArea.x;
         if (_spacingType == ChildSpacing::Around) {
-          _children[i].get()->_bounds.x += _spacing;
+          _children[i]->_bounds.x += _spacing;
         }
       } else {
-        _children[i].get()->_bounds.x = _children[i - 1].get()->_bounds.x + _children[i - 1].get()->_bounds.w;
-        _children[i].get()->_bounds.x += _spacing;
+        _children[i]->_bounds.x = _children[i - 1]->_bounds.x + _children[i - 1]->_bounds.w;
+        _children[i]->_bounds.x += _spacing;
       }
 
-      _children[i].get()->_bounds.y = _contentArea.y + (parentHeight - _children[i].get()->_bounds.h) / 2;
-      if (_children[i].get()->_bounds.y < 0) {
-        _children[i].get()->_bounds.y = 0;
+      _children[i]->_bounds.y = _contentArea.y + (parentHeight - _children[i]->_bounds.h) / 2;
+      if (_children[i]->_bounds.y < 0) {
+        _children[i]->_bounds.y = 0;
       }
 
-      _children[i].get()->_updateContentArea();
+      _children[i]->_updateContentArea();
     }
 
     return spaceLeft;
@@ -359,7 +359,7 @@ namespace SGI {
     // Children are expected to be reset already
     unsigned int contentHeight = 0;
     for (size_t i = 0; i < numChildren; ++i) {
-      contentHeight += _children[i].get()->_bounds.h;
+      contentHeight += _children[i]->_bounds.h;
     }
     if (_spacingType == ChildSpacing::Around) {
       contentHeight += (numChildren + 1) * _spacing;
@@ -382,22 +382,22 @@ namespace SGI {
 
         for (size_t i = 0; i < numChildren; ++i) {
           bool didGrow = false;
-          if (_children[i].get()->_bounds.h + growBy <= _children[i].get()->_constraints.height.maxValue &&
-              contentHeight + _children[i].get()->_bounds.h + growBy <= parentHeight) {
-            _children[i].get()->_bounds.h += growBy;
+          if (_children[i]->_bounds.h + growBy <= _children[i]->_constraints.height.maxValue &&
+              contentHeight + _children[i]->_bounds.h + growBy <= parentHeight) {
+            _children[i]->_bounds.h += growBy;
             didGrow = true;
-          } else if (_children[i].get()->_bounds.h + growBy > _children[i].get()->_constraints.height.maxValue &&
-                     _children[i].get()->_bounds.h < _children[i].get()->_constraints.height.maxValue &&
-                     contentHeight + _children[i].get()->_bounds.h + _children[i].get()->_constraints.height.maxValue <= parentHeight) {
-            _children[i].get()->_bounds.h = _children[i].get()->_constraints.height.maxValue;
+          } else if (_children[i]->_bounds.h + growBy > _children[i]->_constraints.height.maxValue &&
+                     _children[i]->_bounds.h < _children[i]->_constraints.height.maxValue &&
+                     contentHeight + _children[i]->_bounds.h + _children[i]->_constraints.height.maxValue <= parentHeight) {
+            _children[i]->_bounds.h = _children[i]->_constraints.height.maxValue;
           }
 
-          contentHeight += _children[i].get()->_bounds.h;
+          contentHeight += _children[i]->_bounds.h;
           if (i != 0 || _spacingType == ChildSpacing::Around) {
             contentHeight += _spacing;
           }
 
-          if (didGrow && _children[i].get()->_bounds.h < _children[i].get()->_constraints.height.maxValue && contentHeight < parentHeight) {
+          if (didGrow && _children[i]->_bounds.h < _children[i]->_constraints.height.maxValue && contentHeight < parentHeight) {
             canGrowHeight = true;
           }
         }
@@ -422,7 +422,7 @@ namespace SGI {
         }
 
         for (size_t i = 0; i < numChildren; ++i) {
-          contentHeight += _children[i].get()->_bounds.h;
+          contentHeight += _children[i]->_bounds.h;
           if (i != 0 || _spacingType == ChildSpacing::Around) {
             contentHeight += _spacing;
           }
@@ -441,17 +441,17 @@ namespace SGI {
     }
 
     for (size_t i = 0; i < numChildren; ++i) {
-      _children[i].get()->_bounds.w = parentWidth > _children[i].get()->_constraints.width.maxValue ? _children[i].get()->_constraints.width.maxValue : parentWidth;
+      _children[i]->_bounds.w = parentWidth > _children[i]->_constraints.width.maxValue ? _children[i]->_constraints.width.maxValue : parentWidth;
 
-      _children[i].get()->_bounds.y = (i == 0)
+      _children[i]->_bounds.y = (i == 0)
         ? _contentArea.y + (_spacingType == ChildSpacing::Around ? _spacing : 0)
-        : _children[i - 1].get()->_bounds.y + _children[i - 1].get()->_bounds.h + _spacing;
+        : _children[i - 1]->_bounds.y + _children[i - 1]->_bounds.h + _spacing;
 
-      _children[i].get()->_bounds.x = _contentArea.x + (parentWidth - _children[i].get()->_bounds.w) / 2;
-      if (_children[i].get()->_bounds.x < 0) {
-        _children[i].get()->_bounds.x = 0;
+      _children[i]->_bounds.x = _contentArea.x + (parentWidth - _children[i]->_bounds.w) / 2;
+      if (_children[i]->_bounds.x < 0) {
+        _children[i]->_bounds.x = 0;
       }
-      _children[i].get()->_updateContentArea();
+      _children[i]->_updateContentArea();
     }
 
     return spaceLeft;
@@ -460,13 +460,15 @@ namespace SGI {
   void Container::_findRecursive(const std::string& name, std::vector<std::shared_ptr<Widget>>& result) const
   {
     for (const auto& child : _children) {
-      if (child.get()->_name == name) {
-        result.push_back(child);
-      }
+      if (child) {  
+        if (child->_name == name) {
+          result.push_back(child);
+        }
 
-      if (dynamic_cast<Container*>(child.get())) {
-        std::shared_ptr<Container> child = std::static_pointer_cast<Container>(child);
-        child.get()->_findRecursive(name, result);
+        auto containerChild = std::dynamic_pointer_cast<Container>(child);
+        if (containerChild) {
+          containerChild->_findRecursive(name, result);
+        }
       }
     }
   }
@@ -475,7 +477,7 @@ namespace SGI {
   {
     Widget::_render(deltaTime);
     for (size_t i = 0; i < _children.size(); ++i) {
-      _children[i].get()->_render(deltaTime);
+      _children[i]->_render(deltaTime);
       SDL_SetRenderClipRect(_renderer.get(), NULL);
     }
   }
@@ -484,7 +486,7 @@ namespace SGI {
   {
     Widget::_renderOverlay(deltaTime);
     for (size_t i = 0; i < _children.size(); ++i) {
-      _children[i].get()->_renderOverlay(deltaTime);
+      _children[i]->_renderOverlay(deltaTime);
       SDL_SetRenderClipRect(_renderer.get(), NULL);
     }
   }

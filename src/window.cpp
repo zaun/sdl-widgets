@@ -9,8 +9,8 @@ namespace SGI {
   std::shared_ptr<Window> Window::create(const std::string& title, int width, int height)
   {
     std::shared_ptr<Window> widget = std::make_shared<Window>(Window(title, width, height));
-    widget.get()->_root = widget;
-    widget.get()->_self = widget;
+    widget->_root = widget;
+    widget->_self = widget;
 
     return widget;
   }
@@ -181,13 +181,13 @@ namespace SGI {
       return;
     }
 
-    if (data.get()->sliced) {
-      TextureSlice sliceInfo = data.get()->sliceInfo;
+    if (data->sliced) {
+      TextureSlice sliceInfo = data->sliceInfo;
       // TODO: figure out how to rotate this
-      SDL_RenderTexture9Grid(getRenderer().get(), data.get()->texture.get(), nullptr, sliceInfo.x1, sliceInfo.x2, sliceInfo.y1, sliceInfo.y2, scale, &destRect);
+      SDL_RenderTexture9Grid(getRenderer().get(), data->texture.get(), nullptr, sliceInfo.x1, sliceInfo.x2, sliceInfo.y1, sliceInfo.y2, scale, &destRect);
     } else {
       SDL_FPoint center = {destRect.w / 2, destRect.h / 2};
-      SDL_RenderTextureRotated(getRenderer().get(), data.get()->texture.get(), nullptr, &destRect, angle, &center, SDL_FLIP_NONE);
+      SDL_RenderTextureRotated(getRenderer().get(), data->texture.get(), nullptr, &destRect, angle, &center, SDL_FLIP_NONE);
     }
   }
 
@@ -284,13 +284,13 @@ namespace SGI {
   void Window::setFocused(std::shared_ptr<Widget> widget)
   {
     if (_focused) {
-      _focused.get()->_focused = false;
+      _focused->_focused = false;
     }
     _focused = nullptr;
 
     if (widget) {
       _focused = widget;
-      _focused.get()->_focused = true;
+      _focused->_focused = true;
     }
   }
 

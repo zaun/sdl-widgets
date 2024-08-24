@@ -11,8 +11,8 @@ namespace SGI {
   std::shared_ptr<Button> Button::create()
   {
     std::shared_ptr<Button> widget = std::make_shared<Button>(Button());
-    widget.get()->_self = widget;
-    widget.get()->setConstraintFixed(SGI::Widget::ConstraintType::Height, 44);
+    widget->_self = widget;
+    widget->setConstraintFixed(SGI::Widget::ConstraintType::Height, 44);
 
     return widget;
   }
@@ -21,15 +21,15 @@ namespace SGI {
   {
     if (_mouseButtonState[1]) {
       if (!_buttonPressedTexture.empty()) {
-        _root.get()->renderTexture(_buttonPressedTexture, SDL_FRect{(float)_bounds.x, (float)_bounds.y, (float)_bounds.w, (float)_bounds.h});
+        _root->renderTexture(_buttonPressedTexture, SDL_FRect{(float)_bounds.x, (float)_bounds.y, (float)_bounds.w, (float)_bounds.h});
       }
     } else if (isMouseOver()) {
       if (!_buttonHoverTexture.empty()) {
-        _root.get()->renderTexture(_buttonHoverTexture, SDL_FRect{(float)_bounds.x, (float)_bounds.y, (float)_bounds.w, (float)_bounds.h});
+        _root->renderTexture(_buttonHoverTexture, SDL_FRect{(float)_bounds.x, (float)_bounds.y, (float)_bounds.w, (float)_bounds.h});
       }
     } else {
       if (!_buttonTexture.empty()) {
-        _root.get()->renderTexture(_buttonTexture, SDL_FRect{(float)_bounds.x, (float)_bounds.y, (float)_bounds.w, (float)_bounds.h});
+        _root->renderTexture(_buttonTexture, SDL_FRect{(float)_bounds.x, (float)_bounds.y, (float)_bounds.w, (float)_bounds.h});
       }
     }
 

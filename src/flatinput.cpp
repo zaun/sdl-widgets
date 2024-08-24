@@ -11,9 +11,9 @@ namespace SGI {
   std::shared_ptr<FlatInput> FlatInput::create()
   {
     std::shared_ptr<FlatInput> widget = std::make_shared<FlatInput>(FlatInput());
-    widget.get()->_self = widget;
-    widget.get()->setConstraintFixed(SGI::Widget::ConstraintType::Height, 36);
-    widget.get()->setPadding(12, 12, 6, 6);
+    widget->_self = widget;
+    widget->setConstraintFixed(SGI::Widget::ConstraintType::Height, 36);
+    widget->setPadding(12, 12, 6, 6);
 
     return widget;
   }
@@ -72,14 +72,14 @@ namespace SGI {
           _cursorIndex = _getCursorIndexFromMouse();
           _selectStart = _cursorIndex;
           _updatePosition();
-          SDL_StartTextInput(_root.get()->getWindow().get());
+          SDL_StartTextInput(_root->getWindow().get());
         } else if (isMouseOver() && _focused) {
           _cursorIndex = _getCursorIndexFromMouse();
           _selectStart = _cursorIndex;
           _updatePosition();
         } else if (!isMouseOver() && _focused) {
           setFocused(false);
-          SDL_StopTextInput(_root.get()->getWindow().get());
+          SDL_StopTextInput(_root->getWindow().get());
         }
         break;
       }
@@ -238,10 +238,10 @@ namespace SGI {
   void FlatInput::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _textColor = theme.primaryText;
-    _borderColor = theme.primaryBorder;
-    _fillColor = theme.primaryFill;
-    _selectColor = theme.textSelection;
+    _textColor = theme.primary.textColor;
+    _borderColor = theme.primary.borderColor;
+    _fillColor = theme.primary.fillColor;
+    _selectColor = theme.primary.textSelectColor;
     _updateLabel();
   }
   

@@ -10,7 +10,7 @@ namespace SGI {
   std::shared_ptr<FlatSlider> FlatSlider::create()
   {
     std::shared_ptr<FlatSlider> widget = std::make_shared<FlatSlider>(FlatSlider());
-    widget.get()->_self = widget;
+    widget->_self = widget;
 
     return widget;
   }
@@ -18,9 +18,9 @@ namespace SGI {
   std::shared_ptr<FlatSlider> FlatSlider::create(int min, int max, int value)
   {
     std::shared_ptr<FlatSlider> widget = FlatSlider::create();
-    widget.get()->setMinValue(min);
-    widget.get()->setMaxValue(max);
-    widget.get()->setValue(0);
+    widget->setMinValue(min);
+    widget->setMaxValue(max);
+    widget->setValue(0);
 
     return widget;
   }
@@ -55,8 +55,10 @@ namespace SGI {
   void FlatSlider::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _borderColor = theme.primaryBorder;
-    _fillColor = theme.primaryFill;
+    _trackBorder = theme.primary.borderColor;
+    _trackFill = theme.primary.fillColor;
+    _handleBorder = theme.primary.accentBorderColor;
+    _handleFill = theme.primary.accentFillColor;
   }
 
   void FlatSlider::setValue(int value)
@@ -69,24 +71,30 @@ namespace SGI {
     if (!_root) {
       return;
     }
-    Widget::_render(deltaTime);
-  }
-
-  void FlatSlider::_updateHandlePosition()
-  {
     SDL_Rect ca = getContentArea();
+
     if (_orientation == Orientation::Horizontal) {
-      int handleWidth = ca.w / 10;
-      _handleRect.w = handleWidth;
-      _handleRect.h = ca.h;
-      _handleRect.x = ca.x + (_value - _minValue) / (_maxValue - _minValue) * (ca.w - handleWidth);
-      _handleRect.y = ca.y;
+
+      _handleRect.x = ca.x + (float)(_value - _minValue) / (_maxValue - _minValue) * (ca.w - _handleSize);
+      _handleRect.y = ca.y + (ca.h - _handleSize) / 2;
+      _handleRect.w = _handleSize;
+      _handleRect.h = _handleSize;
+
+      SDL_Rect trackRect;
+      trackRect.x = ca.x;
+      trackRect.y = ca.y + (ca.h - _trackSize) / 2;
+      trackRect.w = ca.w;
+      trackRect.h  = _trackSize;
+      _drawRoundedRect(getRenderer().get(), trackRect, _trackBorder, _trackFill, true, 2, _trackSize / 2);
     } else {
-      int handleHeight = ca.h / 10;
-      _handleRect.w = ca.w;
-      _handleRect.h = handleHeight;
-      _handleRect.x = ca.x;
-      _handleRect.y = ca.y + (_value - _minValue) / (_maxValue - _minValue) * (ca.h - handleHeight);
+      _handleRect.x = ca.x + (ca.w - _handleSize) / 2;
+      _handleRect.y = ca.y + (_value - _minValue) / (_maxValue - _minValue) * (ca.h - _handleSize);
+      _handleRect.w = _handleSize;
+      _handleRect.h = _handleSize;
     }
+
+    _drawRoundedRect(getRenderer().get(), _handleRect, _handleBorder, _handleFill, true, 2, _handleSize / 2);
+
+    Widget::_render(deltaTime);
   }
 }

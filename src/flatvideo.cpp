@@ -11,8 +11,8 @@ namespace SGI {
   std::shared_ptr<FlatVideo> FlatVideo::create()
   {
     std::shared_ptr<FlatVideo> widget(new FlatVideo(), [](FlatVideo* ptr) { delete ptr; });
-    widget.get()->_self = widget;
-    widget.get()->_init();
+    widget->_self = widget;
+    widget->_init();
 
     return widget;
   }
@@ -31,16 +31,34 @@ namespace SGI {
   {
     std::string fullPath = _resourcePath + fileName;
     _video = std::make_unique<Platform::Video>(fullPath);
+
+    if (_callback) {
+      _video->setLocationCallback([this](float currentTime, float maxTime) {
+        _callback(_root, _self, currentTime, maxTime);
+      });
+    }
   }
 
   void FlatVideo::play()
   {
-    _video.get()->play();
+    _video->play();
+  }
+
+  void FlatVideo::setLocationCallback(std::function<void(std::shared_ptr<Window>, std::shared_ptr<Widget>, float currentTime, float maxTime)> callback)
+  {
+    if (!_video) {
+      return;
+    }
+    _callback = callback;
+
+    _video->setLocationCallback([this](float currentTime, float maxTime) {
+      _callback(_root, _self, currentTime, maxTime);
+    });
   }
 
   void FlatVideo::setRepeat(bool value)
   {
-    _video.get()->setRepeat(value);
+    _video->setRepeat(value);
   }
 
   void FlatVideo::setResourcePath(std::string path)
@@ -54,8 +72,8 @@ namespace SGI {
   void FlatVideo::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _borderColor = theme.primaryBorder;
-    _fillColor = theme.primaryFill;
+    _borderColor = theme.primary.borderColor;
+    _fillColor = theme.primary.backgroundColor;
   }
 
   void FlatVideo::_cleanup()
@@ -74,7 +92,7 @@ namespace SGI {
     _drawRoundedRect(getRenderer().get(), _bounds, _borderColor, _fillColor, true, 1, 6);
 
     SDL_Rect ca = getContentArea();
-    _video.get()->render(getRenderer().get(), ca);
+    _video->render(getRenderer().get(), ca);
   }
 
 }

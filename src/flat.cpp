@@ -8,85 +8,139 @@ namespace SGI {
   {
     _themes["Light"] = Theme{
       "Light",
-      _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#000000"), _hexToSDLColor("#666666"),
-      _hexToSDLColor("#CCCCCC"), _hexToSDLColor("#0055FF"), _hexToSDLColor("#E0E0E0"), _hexToSDLColor("#F0F0F0"),
-      _hexToSDLColor("#3399FF"), _hexToSDLColor("#3399FF"), _hexToSDLColor("#3399FF"),
-      {
-        {_hexToSDLColor("#0055FF"), _hexToSDLColor("#0044CC"), _hexToSDLColor("#003399")},
-        {_hexToSDLColor("#CCCCCC"), _hexToSDLColor("#BBBBBB"), _hexToSDLColor("#AAAAAA")},
-        {_hexToSDLColor("#FFCC00"), _hexToSDLColor("#FFB300"), _hexToSDLColor("#CC8A00")},
-        {_hexToSDLColor("#00CC99"), _hexToSDLColor("#009966"), _hexToSDLColor("#007744")},
-        {_hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000")}
+      ButtonStyles{
+        { _hexToSDLColor("#0055FF"), _hexToSDLColor("#0044CC"), _hexToSDLColor("#003399"), _hexToSDLColor("#CCCCCC") },
+        { _hexToSDLColor("#CCCCCC"), _hexToSDLColor("#BBBBBB"), _hexToSDLColor("#AAAAAA"), _hexToSDLColor("#F0F0F0") },
+        { _hexToSDLColor("#FFCC00"), _hexToSDLColor("#FFB300"), _hexToSDLColor("#CC8A00"), _hexToSDLColor("#FFF5CC") },
+        { _hexToSDLColor("#00CC99"), _hexToSDLColor("#009966"), _hexToSDLColor("#007744"), _hexToSDLColor("#CCFFEB") },
+        { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#FFCCCC") }
+      },
+      Colors{
+        _hexToSDLColor("#3399FF"), _hexToSDLColor("#E0E0E0"), _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#CCCCCC"),
+        _hexToSDLColor("#E0E0E0"), _hexToSDLColor("#0055FF"), _hexToSDLColor("#000000"), _hexToSDLColor("#3399FF")
+      },
+      Colors{
+        _hexToSDLColor("#CCCCCC"), _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#CCCCCC"),
+        _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#0055FF"), _hexToSDLColor("#666666"), _hexToSDLColor("#3399FF")
+      },
+      Colors{
+        _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#E0E0E0"), _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#CCCCCC"),
+        _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#0055FF"), _hexToSDLColor("#000000"), _hexToSDLColor("#3399FF")
       }
-    };
+  };
 
-    _themes["Dark"] = Theme{
+  _themes["Dark"] = Theme{
       "Dark",
-      _hexToSDLColor("#1E1E1E"), _hexToSDLColor("#2D2D2D"), _hexToSDLColor("#D4D4D4"), _hexToSDLColor("#A6A6A6"),
-      _hexToSDLColor("#3C3C3C"), _hexToSDLColor("#007ACC"), _hexToSDLColor("#252526"), _hexToSDLColor("#3C3C3C"),
-      _hexToSDLColor("#3399FF"), _hexToSDLColor("#3399FF"), _hexToSDLColor("#3399FF"),
-      {
-        {_hexToSDLColor("#007ACC"), _hexToSDLColor("#006BB3"), _hexToSDLColor("#005A99")},
-        {_hexToSDLColor("#3C3C3C"), _hexToSDLColor("#4A4A4A"), _hexToSDLColor("#5A5A5A")},
-        {_hexToSDLColor("#FFCC00"), _hexToSDLColor("#FFB300"), _hexToSDLColor("#CC8A00")},
-        {_hexToSDLColor("#00CC99"), _hexToSDLColor("#009966"), _hexToSDLColor("#007744")},
-        {_hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000")}
+      ButtonStyles{
+        { _hexToSDLColor("#007ACC"), _hexToSDLColor("#006BB3"), _hexToSDLColor("#005A99"), _hexToSDLColor("#3C3C3C") },
+        { _hexToSDLColor("#3C3C3C"), _hexToSDLColor("#4A4A4A"), _hexToSDLColor("#5A5A5A"), _hexToSDLColor("#2D2D2D") },
+        { _hexToSDLColor("#FFCC00"), _hexToSDLColor("#FFB300"), _hexToSDLColor("#CC8A00"), _hexToSDLColor("#FFF5CC") },
+        { _hexToSDLColor("#00CC99"), _hexToSDLColor("#009966"), _hexToSDLColor("#007744"), _hexToSDLColor("#CCFFEB") },
+        { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#FFCCCC") }
+      },
+      Colors{
+        _hexToSDLColor("#3399FF"), _hexToSDLColor("#252526"), _hexToSDLColor("#1E1E1E"), _hexToSDLColor("#3C3C3C"),
+        _hexToSDLColor("#252526"), _hexToSDLColor("#007ACC"), _hexToSDLColor("#D4D4D4"), _hexToSDLColor("#3399FF")
+      },
+      Colors{
+        _hexToSDLColor("#3C3C3C"), _hexToSDLColor("#2D2D2D"), _hexToSDLColor("#2D2D2D"), _hexToSDLColor("#3C3C3C"),
+        _hexToSDLColor("#2D2D2D"), _hexToSDLColor("#007ACC"), _hexToSDLColor("#A6A6A6"), _hexToSDLColor("#3399FF")
+      },
+      Colors{
+        _hexToSDLColor("#2D2D2D"), _hexToSDLColor("#252526"), _hexToSDLColor("#1E1E1E"), _hexToSDLColor("#3C3C3C"),
+        _hexToSDLColor("#252526"), _hexToSDLColor("#007ACC"), _hexToSDLColor("#D4D4D4"), _hexToSDLColor("#3399FF")
       }
-    };
-    
-    _themes["Alien Green"] = Theme{
+  };
+
+  _themes["Alien Green"] = Theme{
       "Alien Green",
-      _hexToSDLColor("#001A00"), _hexToSDLColor("#002200"), _hexToSDLColor("#A6FFA6"), _hexToSDLColor("#66CC66"),
-      _hexToSDLColor("#00FF00"), _hexToSDLColor("#66FF66"), _hexToSDLColor("#003300"), _hexToSDLColor("#004400"),
-      _hexToSDLColor("#00FF00"), _hexToSDLColor("#00CC00"), _hexToSDLColor("#00FF00"),
-      {
-        {_hexToSDLColor("#00FF00"), _hexToSDLColor("#00CC00"), _hexToSDLColor("#009900")},
-        {_hexToSDLColor("#006600"), _hexToSDLColor("#004C00"), _hexToSDLColor("#003300")},
-        {_hexToSDLColor("#FFCC00"), _hexToSDLColor("#FFB300"), _hexToSDLColor("#CC8A00")},
-        {_hexToSDLColor("#66FF66"), _hexToSDLColor("#4DFF4D"), _hexToSDLColor("#33CC33")},
-        {_hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000")}
+      ButtonStyles{
+        { _hexToSDLColor("#00FF00"), _hexToSDLColor("#00CC00"), _hexToSDLColor("#009900"), _hexToSDLColor("#00FF00") },
+        { _hexToSDLColor("#006600"), _hexToSDLColor("#004C00"), _hexToSDLColor("#003300"), _hexToSDLColor("#002200") },
+        { _hexToSDLColor("#FFCC00"), _hexToSDLColor("#FFB300"), _hexToSDLColor("#CC8A00"), _hexToSDLColor("#FFF5CC") },
+        { _hexToSDLColor("#66FF66"), _hexToSDLColor("#4DFF4D"), _hexToSDLColor("#33CC33"), _hexToSDLColor("#CCFFEB") },
+        { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#FFCCCC") }
+      },
+      Colors{
+        _hexToSDLColor("#00FF00"), _hexToSDLColor("#003300"), _hexToSDLColor("#001A00"), _hexToSDLColor("#00FF00"),
+        _hexToSDLColor("#003300"), _hexToSDLColor("#66FF66"), _hexToSDLColor("#A6FFA6"), _hexToSDLColor("#00CC00")
+      },
+      Colors{
+        _hexToSDLColor("#00FF00"), _hexToSDLColor("#004400"), _hexToSDLColor("#002200"), _hexToSDLColor("#00FF00"),
+        _hexToSDLColor("#004400"), _hexToSDLColor("#66FF66"), _hexToSDLColor("#66CC66"), _hexToSDLColor("#00CC00")
+      },
+      Colors{
+        _hexToSDLColor("#00FF00"), _hexToSDLColor("#003300"), _hexToSDLColor("#001A00"), _hexToSDLColor("#00FF00"),
+        _hexToSDLColor("#003300"), _hexToSDLColor("#66FF66"), _hexToSDLColor("#A6FFA6"), _hexToSDLColor("#00CC00")
       }
-    };
+  };
 
-    _themes["Techie Blue"] = Theme{
+  _themes["Techie Blue"] = Theme{
       "Techie Blue",
-      _hexToSDLColor("#001F33"), _hexToSDLColor("#00264D"), _hexToSDLColor("#80D4FF"), _hexToSDLColor("#4DA6FF"),
-      _hexToSDLColor("#00BFFF"), _hexToSDLColor("#66CFFF"), _hexToSDLColor("#003366"), _hexToSDLColor("#004080"),
-      _hexToSDLColor("#00BFFF"), _hexToSDLColor("#3399FF"), _hexToSDLColor("#00BFFF"),
-      {
-        {_hexToSDLColor("#00BFFF"), _hexToSDLColor("#0099CC"), _hexToSDLColor("#006699")},
-        {_hexToSDLColor("#004080"), _hexToSDLColor("#003366"), _hexToSDLColor("#00264D")},
-        {_hexToSDLColor("#FFA500"), _hexToSDLColor("#FF8C00"), _hexToSDLColor("#CC7000")},
-        {_hexToSDLColor("#66CFFF"), _hexToSDLColor("#4DB8E6"), _hexToSDLColor("#3399CC")},
-        {_hexToSDLColor("#FF4D4D"), _hexToSDLColor("#FF1A1A"), _hexToSDLColor("#B30000")}
+      ButtonStyles{
+        { _hexToSDLColor("#00BFFF"), _hexToSDLColor("#0099CC"), _hexToSDLColor("#006699"), _hexToSDLColor("#00BFFF") },
+        { _hexToSDLColor("#004080"), _hexToSDLColor("#003366"), _hexToSDLColor("#00264D"), _hexToSDLColor("#00264D") },
+        { _hexToSDLColor("#FFA500"), _hexToSDLColor("#FF8C00"), _hexToSDLColor("#CC7000"), _hexToSDLColor("#FFF5CC") },
+        { _hexToSDLColor("#66CFFF"), _hexToSDLColor("#4DB8E6"), _hexToSDLColor("#3399CC"), _hexToSDLColor("#E6F7FF") },
+        { _hexToSDLColor("#FF4D4D"), _hexToSDLColor("#FF1A1A"), _hexToSDLColor("#B30000"), _hexToSDLColor("#FFCCCC") }
+      },
+      Colors{
+        _hexToSDLColor("#00BFFF"), _hexToSDLColor("#003366"), _hexToSDLColor("#001F33"), _hexToSDLColor("#00BFFF"),
+        _hexToSDLColor("#003366"), _hexToSDLColor("#66CFFF"), _hexToSDLColor("#80D4FF"), _hexToSDLColor("#3399FF")
+      },
+      Colors{
+        _hexToSDLColor("#00BFFF"), _hexToSDLColor("#004080"), _hexToSDLColor("#00264D"), _hexToSDLColor("#00BFFF"),
+        _hexToSDLColor("#004080"), _hexToSDLColor("#66CFFF"), _hexToSDLColor("#4DA6FF"), _hexToSDLColor("#3399FF")
+      },
+      Colors{
+        _hexToSDLColor("#00BFFF"), _hexToSDLColor("#003366"), _hexToSDLColor("#001F33"), _hexToSDLColor("#00BFFF"),
+        _hexToSDLColor("#003366"), _hexToSDLColor("#66CFFF"), _hexToSDLColor("#80D4FF"), _hexToSDLColor("#3399FF")
       }
-    };
+  };
 
-    _themes["Devilish Red"] = Theme{
+  _themes["Devil Red"] = Theme{
       "Devilish Red",
-      _hexToSDLColor("#330000"), _hexToSDLColor("#440000"), _hexToSDLColor("#FF6666"), _hexToSDLColor("#FF3333"),
-      _hexToSDLColor("#FF0000"), _hexToSDLColor("#FF4D4D"), _hexToSDLColor("#550000"), _hexToSDLColor("#660000"),
-      _hexToSDLColor("#FF0000"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#FF0000"),
-      {
-        {_hexToSDLColor("#FF0000"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000")},
-        {_hexToSDLColor("#660000"), _hexToSDLColor("#4C0000"), _hexToSDLColor("#330000")},
-        {_hexToSDLColor("#FF9900"), _hexToSDLColor("#CC7A00"), _hexToSDLColor("#994C00")},
-        {_hexToSDLColor("#FF6666"), _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000")},
-        {_hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000")}
+      ButtonStyles{
+        { _hexToSDLColor("#FF0000"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#FF0000") },
+        { _hexToSDLColor("#660000"), _hexToSDLColor("#4C0000"), _hexToSDLColor("#330000"), _hexToSDLColor("#4C0000") },
+        { _hexToSDLColor("#FF9900"), _hexToSDLColor("#CC7A00"), _hexToSDLColor("#994C00"), _hexToSDLColor("#FFF5CC") },
+        { _hexToSDLColor("#FF6666"), _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#FFCCCC") },
+        { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#FFCCCC") }
+      },
+      Colors{
+        _hexToSDLColor("#FF0000"), _hexToSDLColor("#550000"), _hexToSDLColor("#330000"), _hexToSDLColor("#FF0000"),
+        _hexToSDLColor("#550000"), _hexToSDLColor("#FF4D4D"), _hexToSDLColor("#FF6666"), _hexToSDLColor("#CC0000")
+      },
+      Colors{
+        _hexToSDLColor("#FF0000"), _hexToSDLColor("#660000"), _hexToSDLColor("#440000"), _hexToSDLColor("#FF0000"),
+        _hexToSDLColor("#660000"), _hexToSDLColor("#FF4D4D"), _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000")
+      },
+      Colors{
+        _hexToSDLColor("#FF0000"), _hexToSDLColor("#550000"), _hexToSDLColor("#330000"), _hexToSDLColor("#FF0000"),
+        _hexToSDLColor("#550000"), _hexToSDLColor("#FF4D4D"), _hexToSDLColor("#FF6666"), _hexToSDLColor("#CC0000")
       }
-    };
+  };
 
-    _themes["Pastel"] = Theme{
+  _themes["Pastel"] = Theme{
       "Pastel",
-      _hexToSDLColor("#F7F7F7"), _hexToSDLColor("#EAEAEA"), _hexToSDLColor("#4C4C4C"), _hexToSDLColor("#7D7D7D"),
-      _hexToSDLColor("#CCCCCC"), _hexToSDLColor("#A8E6CF"), _hexToSDLColor("#FFE3E3"), _hexToSDLColor("#D9EAD3"),
-      _hexToSDLColor("#FFB3B3"), _hexToSDLColor("#B3D9FF"), _hexToSDLColor("#FFB3B3"),
-      {
-        {_hexToSDLColor("#FFB3B3"), _hexToSDLColor("#FF9999"), _hexToSDLColor("#FF8080")},
-        {_hexToSDLColor("#B3D9FF"), _hexToSDLColor("#99CCFF"), _hexToSDLColor("#80BFFF")},
-        {_hexToSDLColor("#FFD966"), _hexToSDLColor("#FFCC33"), _hexToSDLColor("#E6B800")},
-        {_hexToSDLColor("#A8E6CF"), _hexToSDLColor("#94D6B8"), _hexToSDLColor("#7CBFA2")},
-        {_hexToSDLColor("#FF9999"), _hexToSDLColor("#FF6666"), _hexToSDLColor("#FF3333")}
+      ButtonStyles{
+        { _hexToSDLColor("#FFB3B3"), _hexToSDLColor("#FF9999"), _hexToSDLColor("#FF8080"), _hexToSDLColor("#FFCCCC") },
+        { _hexToSDLColor("#B3D9FF"), _hexToSDLColor("#99CCFF"), _hexToSDLColor("#80BFFF"), _hexToSDLColor("#D9EAD3") },
+        { _hexToSDLColor("#FFD966"), _hexToSDLColor("#FFCC33"), _hexToSDLColor("#E6B800"), _hexToSDLColor("#FFF5CC") },
+        { _hexToSDLColor("#A8E6CF"), _hexToSDLColor("#94D6B8"), _hexToSDLColor("#7CBFA2"), _hexToSDLColor("#E6F7FF") },
+        { _hexToSDLColor("#FF9999"), _hexToSDLColor("#FF6666"), _hexToSDLColor("#FF3333"), _hexToSDLColor("#FFCCCC") }
+      },
+      Colors{
+        _hexToSDLColor("#FFB3B3"), _hexToSDLColor("#FFE3E3"), _hexToSDLColor("#F7F7F7"), _hexToSDLColor("#CCCCCC"),
+        _hexToSDLColor("#FFE3E3"), _hexToSDLColor("#A8E6CF"), _hexToSDLColor("#4C4C4C"), _hexToSDLColor("#B3D9FF")
+      },
+      Colors{
+        _hexToSDLColor("#FFB3B3"), _hexToSDLColor("#D9EAD3"), _hexToSDLColor("#EAEAEA"), _hexToSDLColor("#FFE3E3"),
+        _hexToSDLColor("#D9EAD3"), _hexToSDLColor("#A8E6CF"), _hexToSDLColor("#7D7D7D"), _hexToSDLColor("#B3D9FF")
+      },
+      Colors{
+        _hexToSDLColor("#FFB3B3"), _hexToSDLColor("#FFE3E3"), _hexToSDLColor("#F7F7F7"), _hexToSDLColor("#FFE3E3"),
+        _hexToSDLColor("#FFE3E3"), _hexToSDLColor("#A8E6CF"), _hexToSDLColor("#4C4C4C"), _hexToSDLColor("#B3D9FF")
       }
     };
   }

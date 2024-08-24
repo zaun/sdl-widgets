@@ -1,5 +1,5 @@
-#ifndef SGI_FLAT_LABEL_H
-#define SGI_FLAT_LABEL_H
+#ifndef SGI_FLAT_SLIDER_H
+#define SGI_FLAT_SLIDER_H
 
 #include <SDL3/SDL.h>
 #include <string>
@@ -32,8 +32,13 @@ namespace SGI {
     FlatSlider() { };
 
   private:
-    SDL_Color _borderColor;
-    SDL_Color _fillColor;
+    SDL_Color _trackBorder;
+    SDL_Color _trackFill;
+    SDL_Color _handleBorder;
+    SDL_Color _handleFill;
+
+    int _trackSize = 10;
+    int _handleSize = 18;
 
     int _minValue = 0;
     int _maxValue = 100;
@@ -45,10 +50,9 @@ namespace SGI {
     bool _dragging = false;
 
     void _render(double deltaTime) override;
-    void _updateHandlePosition();
 
   };
   using FlatSliderPtr = std::shared_ptr<SGI::FlatSlider>;
 }
 
-#endif // SGI_FLAT_LABEL_H
+#endif // SGI_FLAT_SLIDER_H

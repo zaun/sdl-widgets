@@ -11,10 +11,10 @@ namespace SGI {
   std::shared_ptr<FlatButton> FlatButton::create()
   {
     std::shared_ptr<FlatButton> widget = std::make_shared<FlatButton>(FlatButton());
-    widget.get()->_self = widget;
-    widget.get()->setConstraintFixed(SGI::Widget::ConstraintType::Width, 100);
-    widget.get()->setConstraintFixed(SGI::Widget::ConstraintType::Height, 36);
-    widget.get()->setPadding(12, 12, 6, 6);
+    widget->_self = widget;
+    widget->setConstraintFixed(SGI::Widget::ConstraintType::Width, 100);
+    widget->setConstraintFixed(SGI::Widget::ConstraintType::Height, 36);
+    widget->setPadding(12, 12, 6, 6);
 
     return widget;
   }
@@ -22,7 +22,7 @@ namespace SGI {
   std::shared_ptr<FlatButton> FlatButton::create(std::string label)
   {
     std::shared_ptr<FlatButton> widget = FlatButton::create();
-    widget.get()->setLabel(label);
+    widget->setLabel(label);
 
     return widget;
   }

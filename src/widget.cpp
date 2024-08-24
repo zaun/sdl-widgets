@@ -174,9 +174,9 @@ namespace SGI {
   void Widget::setFocused(bool value)
   {
     if (_root && _self && value) {
-      _root.get()->setFocused(_self);
+      _root->setFocused(_self);
     } else {
-      _root.get()->setFocused(nullptr);
+      _root->setFocused(nullptr);
     }
   }
 

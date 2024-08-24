@@ -10,8 +10,8 @@ namespace SGI {
   std::shared_ptr<FlatOption> FlatOption::create()
   {
     std::shared_ptr<FlatOption> widget = std::make_shared<FlatOption>(FlatOption());
-    widget.get()->_self = widget;
-    widget.get()->setPadding(12, 12, 6, 6);
+    widget->_self = widget;
+    widget->setPadding(12, 12, 6, 6);
 
     return widget;
   }
@@ -19,7 +19,7 @@ namespace SGI {
   std::shared_ptr<FlatOption> FlatOption::create(std::string label)
   {
     std::shared_ptr<FlatOption> widget = FlatOption::create();
-    widget.get()->setLabel(label);
+    widget->setLabel(label);
 
     return widget;
   }
@@ -99,9 +99,9 @@ namespace SGI {
   void FlatOption::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _textColor = theme.primaryText;
-    _borderColor = theme.primaryBorder;
-    _fillColor = theme.primaryBorder;
+    _textColor = theme.primary.textColor;
+    _borderColor = theme.primary.accentBorderColor;
+    _fillColor = theme.primary.accentFillColor;
     _updateLabel();
   }
 

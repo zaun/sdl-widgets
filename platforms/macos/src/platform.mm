@@ -1,4 +1,5 @@
 #include <pwd.h>
+#include <functional>
 #include <SDL3/SDL.h>
 #include <stdexcept>
 #include <unistd.h>
@@ -17,6 +18,9 @@
 @property (nonatomic, assign) int height;
 @property (nonatomic, assign) SDL_Texture *texture;
 @property (nonatomic, assign) BOOL repeatMode;
+@property (nonatomic, copy) void (^locationCallback)(float currentTime, float maxTime);
+@property (nonatomic, strong) dispatch_source_t timer;
+
 
 - (instancetype)initWithFilePath:(const std::string&)filePath;
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -29,6 +33,7 @@
 - (void)seekToTime:(CMTime)time;
 - (CMTime)getDuration;
 - (CMTime)getCurrentTime;
+- (void)setLocationCallback:(void (^)(float currentTime, float maxTime))callback;
 - (void)setRepeatMode:(BOOL)repeatMode;
 - (void)render:(SDL_Renderer*)renderer inRect:(SDL_Rect&)contentArea;
 
@@ -67,8 +72,23 @@
     [self.videoOutput copyPixelBufferForItemTime:firstFrameTime itemTimeForDisplay:NULL];
     
     self.duration = self.player.currentItem.asset.duration;
+
+    [self setupTimer];
   }
   return self;
+}
+
+- (void)dealloc {
+  if (self.timer) {
+    dispatch_source_cancel(self.timer);
+  }
+  if (self.texture) {
+    SDL_DestroyTexture(self.texture);
+    self.texture = nullptr;
+  }
+  [_player.currentItem removeObserver:self forKeyPath:@"status"];
+  [self stop];
+  [super dealloc];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -114,10 +134,6 @@
   return self.player.currentTime;
 }
 
-- (void)setRepeatMode:(BOOL)repeatMode {
-  _repeatMode = repeatMode;
-}
-
 - (void)render:(SDL_Renderer*)renderer inRect:(SDL_Rect&)contentArea {
   if (!self.player || !self.videoOutput) {
     LOG(PLATFORM, "Player or video output not initialized");
@@ -141,9 +157,9 @@
   if (CMTimeCompare(currentTime, nearEndTime) >= 0) {
     if (self.repeatMode) {
       [self.player seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
-        if (finished) {
-          LOG(PLATFORM, "Looped video back to start");
-        }
+        // if (finished) {
+        //   LOG(PLATFORM, "Looped video back to start");
+        // }
       }];
     } else {
       [self stop];
@@ -154,7 +170,7 @@
   CVPixelBufferRef pixelBuffer = [self.videoOutput copyPixelBufferForItemTime:currentTime itemTimeForDisplay:NULL];
 
   if (pixelBuffer == nullptr) {
-    LOG(PLATFORM, "Pixel buffer not valid");
+    // LOG(PLATFORM, "Pixel buffer not valid");
     if (self.texture) {
       SDL_FRect ca;
       ca.x = contentArea.x;
@@ -187,6 +203,31 @@
 
   CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
   CVBufferRelease(pixelBuffer);
+}
+
+- (void)setLocationCallback:(void (^)(float currentTime, float maxTime))callback {
+  if (_locationCallback != callback) {
+    _locationCallback = [callback copy];
+  }
+}
+
+- (void)setRepeatMode:(BOOL)repeatMode {
+  _repeatMode = repeatMode;
+}
+
+- (void)setupTimer {
+  self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+  dispatch_source_set_timer(self.timer, DISPATCH_TIME_NOW, 100 * NSEC_PER_MSEC, 0);
+  dispatch_source_set_event_handler(self.timer, ^{
+    if (self.locationCallback) {
+      double currentTime = CMTimeGetSeconds([self.player currentTime]);
+      double maxTime = CMTimeGetSeconds(self.duration);
+      dispatch_async(dispatch_get_main_queue(), ^{
+        self.locationCallback((float)currentTime, (float)maxTime);
+      });
+    }
+  });
+  dispatch_resume(self.timer);
 }
 
 @end
@@ -246,6 +287,12 @@ namespace SGI {
   {
     CMTime currentTime = [(VideoPlayer*) _osPlayer getCurrentTime];
     return CMTimeGetSeconds(currentTime);
+  }
+
+  void Platform::Video::setLocationCallback(std::function<void(float currentTime, float maxTime)> callback) {
+    [(VideoPlayer*)_osPlayer setLocationCallback:^(float currentTime, float maxTime) {
+      callback(currentTime, maxTime);
+    }];
   }
 
   void Platform::Video::setRepeat(bool value)

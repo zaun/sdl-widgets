@@ -15,6 +15,7 @@ namespace SGI {
 
     void loadFile(std::string fullPath);
     void play();
+    void setLocationCallback(std::function<void(std::shared_ptr<Window>, std::shared_ptr<Widget>, float currentTime, float maxTime)> callback);
     void setRepeat(bool value);
     void setResourcePath(std::string path);
     void setTheme(std::string name) override;
@@ -30,6 +31,8 @@ namespace SGI {
 
     std::string _resourcePath;
     std::unique_ptr<Platform::Video> _video;
+
+    std::function<void(std::shared_ptr<Window>, std::shared_ptr<Widget>, float currentTime, float maxTime)> _callback = nullptr;
 
     void _cleanup();
     void _init();
