@@ -209,6 +209,15 @@ namespace SGI {
     // SDL_RenderRect(getRenderer().get(), &rect);
   };
 
+  void Widget::_setBounds(SDL_Rect& bounds)
+  {
+    _bounds.x = bounds.x;
+    _bounds.y = bounds.y;
+    _bounds.w = bounds.w;
+    _bounds.h = bounds.h;
+    _updateContentArea();
+  }
+
   void Widget::_checkMouseInBounds()
   {
     float mouseX, mouseY;

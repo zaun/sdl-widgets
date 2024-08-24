@@ -33,6 +33,14 @@ namespace SGI {
       W_RESIZE,
     };
 
+    enum SidebarState {
+      CLOSED,
+      LEFT_OPENING,
+      LEFT_OPEN,
+      RIGHT_OPENING,
+      RIGHT_OPEN,
+    };
+
     ~Window() { };
 
     struct TextureSlice {
@@ -51,9 +59,13 @@ namespace SGI {
 
     bool addTexture(const std::string& textureName, const std::string& fileName, const TextureSlice& sliceInfo = {0, 0, 0, 0});
 
+    ContainerPtr getSidebar();
+
     std::shared_ptr<TextureData> getTexture(const std::string& textureName);
 
     std::shared_ptr<SDL_Window> getWindow();
+
+    void openSidebar();
 
     bool processEvent(const SDL_Event *event) override;
 
@@ -73,16 +85,24 @@ namespace SGI {
 
     void setResourcePath(std::string path);
 
+    void setTheme(const std::string& name) override;
+
   protected:
     Window(const std::string& title, int width, int height);
+
+    void _setBounds(SDL_Rect& bounds) override;
 
   private:
     Uint64 _lastRenderCount = 0;
     std::string _resourcePath;
 
     std::shared_ptr<SDL_Window> _window;
-    std::shared_ptr<Widget> _focused;
+    WidgetPtr _focused;
     CursorType _cursor = CursorType::DEFAULT;
+
+    SidebarState _sidebarState = SidebarState::CLOSED;
+    SDL_Rect _sidebarBounds;
+    ContainerPtr _sidebarContainer;
 
     std::string _backgroundTexture;
 

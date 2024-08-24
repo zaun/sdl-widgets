@@ -54,9 +54,16 @@ int main(int argc, char* args[]) {
   win->setCursor(SGI::Window::CursorType::DEFAULT);
   win->setPadding(20, 20, 20, 20);
 
+  SGI::FlatPanelPtr sidebar = SGI::FlatPanel::create();
+  sidebar->setName("sidebar");
+  sidebar->setDirection(SGI::Container::ChildDirection::Column);
+  sidebar->setSpacing(SGI::Container::ChildSpacing::Around);
+  win->getSidebar()->addChild(sidebar);
+  win->openSidebar();
+
   SGI::FlatPanelPtr sectionA = SGI::FlatPanel::create();
   sectionA->setName("sectionA");
-  sectionA->setConstraintFixed(SGI::Widget::ConstraintType::Width, 400);
+  sectionA->setConstraintFixed(SGI::Widget::ConstraintType::Width, 450);
   sectionA->setConstraintMaximum(SGI::Widget::ConstraintType::Height, 300);
   sectionA->setDirection(SGI::Container::ChildDirection::Column);
   sectionA->setSpacing(SGI::Container::ChildSpacing::Around);
@@ -165,7 +172,7 @@ int main(int argc, char* args[]) {
     SGI::FlatButtonPtr btn = std::dynamic_pointer_cast<SGI::FlatButton>(widget);
     return false;
   });
-  sectionA2->addChild(b2);
+  sectionA2->addChild(b3);
 
   SGI::FlatLabelPtr l1 = SGI::FlatLabel::create("Text Input:");
   l1->setName("l1");

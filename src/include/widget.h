@@ -139,6 +139,8 @@ namespace SGI {
     std::string _generateShortCode();
     virtual void _render(double deltaTime);
     virtual void _renderOverlay(double deltaTime) { };
+    
+    virtual void _setBounds(SDL_Rect& bounds);
 
   private:
     void _checkMouseInBounds();

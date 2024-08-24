@@ -25,6 +25,8 @@ namespace SGI {
       Around, //  items are evenly distributed in the line with equal space around them
     };
 
+    static std::shared_ptr<Container> create();
+
     ~Container() { };
 
     /**
@@ -84,13 +86,14 @@ namespace SGI {
      */
     void setSpacing(ChildSpacing type);
 
-    void setTheme(std::string name);
+    virtual void setTheme(const std::string& name);
 
   protected:
     Container();
 
     void _render(double deltaTime) override;
     void _renderOverlay(double deltaTime) override;
+    void _setBounds(SDL_Rect& bounds) override;
 
   private:
     std::vector<std::shared_ptr<Widget>> _children;

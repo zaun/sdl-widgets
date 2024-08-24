@@ -12,6 +12,9 @@ namespace SGI {
     widget->_root = widget;
     widget->_self = widget;
 
+    // Setup the window sidebar container root window
+    widget->_sidebarContainer->_root = widget;
+
     return widget;
   }
 
@@ -56,6 +59,15 @@ namespace SGI {
     _bounds.y = 0;
     _bounds.w = width;
     _bounds.h = height;
+
+    _sidebarContainer = Container::create();
+    _sidebarContainer->setName("WindowSidebarContainer");
+    _sidebarBounds.h = _bounds.h;
+    _sidebarBounds.w = _bounds.w / 4;
+    _sidebarBounds.x = -_sidebarBounds.w;
+    _sidebarBounds.y = 0;
+    _sidebarContainer->_setBounds(_sidebarBounds);
+    _sidebarContainer->setPadding(0, 0, 0, 0);
 
     _resourcePath = SDL_GetBasePath();
   };
@@ -118,6 +130,11 @@ namespace SGI {
     return true;
   }
 
+  ContainerPtr Window::getSidebar()
+  {
+    return _sidebarContainer;
+  }
+
   std::shared_ptr<Window::TextureData> Window::getTexture(const std::string& textureName)
   {
     auto textureIt = _textureCache.find(textureName);
@@ -130,6 +147,12 @@ namespace SGI {
   std::shared_ptr<SDL_Window> Window::getWindow()
   {
     return _window;
+  }
+
+  void Window::openSidebar()
+  {
+    _sidebarState = SidebarState::LEFT_OPENING;
+    LOG(WINDOW, "Sidebar opening");
   }
 
   bool Window::processEvent(const SDL_Event *event)
@@ -166,7 +189,7 @@ namespace SGI {
     }
     _lastRenderCount = current;
 
-    _render(dt);
+    _render(dt / 1000.0);
 
     if (present) {
       SDL_RenderPresent(getRenderer().get());
@@ -301,6 +324,30 @@ namespace SGI {
     }
   }
 
+  void Window::setTheme(const std::string& name)
+  {
+    Container::setTheme(name);
+    _sidebarContainer->setTheme(name);
+  }
+
+  void Window::_setBounds(SDL_Rect& bounds)
+  {
+    Container::_setBounds(bounds);
+
+    _sidebarBounds.y = 0;
+    _sidebarBounds.h = _bounds.h;
+    _sidebarBounds.w = _bounds.w / 4;
+    if (_sidebarState == SidebarState::CLOSED) {
+      _sidebarBounds.x = -_sidebarBounds.w;
+    } else if (_sidebarState == SidebarState::LEFT_OPEN) {
+      _sidebarBounds.x = _sidebarBounds.w;
+    } else if (_sidebarState == SidebarState::LEFT_OPEN) {
+      _sidebarBounds.x = _bounds.w - _sidebarBounds.w;
+    }
+
+    _sidebarContainer->_setBounds(_sidebarBounds);
+  }
+
   void Window::_render(double deltaTime)
   {
     if (!_backgroundTexture.empty()) {
@@ -309,5 +356,18 @@ namespace SGI {
 
     Container::_render(deltaTime);
     Container::_renderOverlay(deltaTime);
+    if (_sidebarState == SidebarState::LEFT_OPENING) {
+      _sidebarBounds.x += 10 * deltaTime;
+      if (_sidebarBounds.x >= 0) {
+        _sidebarBounds.x = 0;
+        _sidebarState = SidebarState::LEFT_OPEN;
+        LOG(WINDOW, "Sidebar opened");
+      }
+      _sidebarContainer->_setBounds(_sidebarBounds);
+    }
+    if (_sidebarState != SidebarState::CLOSED) {
+      _sidebarContainer->_render(deltaTime);
+      _sidebarContainer->_renderOverlay(deltaTime);
+    }
   }
 }
