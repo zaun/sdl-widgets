@@ -20,7 +20,9 @@
 @property (nonatomic, assign) BOOL repeatMode;
 @property (nonatomic, copy) void (^locationCallback)(float currentTime, float maxTime);
 @property (nonatomic, strong) dispatch_source_t timer;
-
+@property (nonatomic, assign) BOOL isSeeking;
+@property (nonatomic, assign) BOOL isPausedForSeek;
+@property (nonatomic, strong) dispatch_source_t seekTimer;
 
 - (instancetype)initWithFilePath:(const std::string&)filePath;
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -123,7 +125,75 @@
 }
 
 - (void)seekToTime:(CMTime)time {
-  [self.player seekToTime:time];
+  if (self.isSeeking) {
+    LOG(PLATFORM, "A seek operation is already in progress.");
+    return;
+  }
+
+  CMTime duration = self.player.currentItem.duration;
+  if (CMTIME_IS_INVALID(time)) {
+    LOG(PLATFORM, "Invalid time.");
+    return;
+  }
+
+  if (CMTimeCompare(time, duration) > 0) {
+    LOG(PLATFORM, "Invalid seek time. Seek time: %.2f seconds, Duration: %.2f seconds", CMTimeGetSeconds(time), CMTimeGetSeconds(duration));
+    return;
+  }
+
+  if (self.player.status != AVPlayerStatusReadyToPlay) {
+    LOG(PLATFORM, "AVPlayer is not ready to play.");
+    return;
+  }
+
+  if (self.player.currentItem.status != AVPlayerItemStatusReadyToPlay) {
+    LOG(PLATFORM, "AVPlayerItem is not ready to play.");
+    return;
+  }
+
+  self.isSeeking = YES;
+  if (!self.isPausedForSeek) {
+    self.isPausedForSeek = YES;
+    [self.player pause];
+  }
+
+  CMTime toleranceBefore = CMTimeMakeWithSeconds(0.5, NSEC_PER_SEC);
+  CMTime toleranceAfter = CMTimeMakeWithSeconds(1.0, NSEC_PER_SEC);
+  if (CMTimeCompare(time, [self.player currentTime]) < 0) {
+      toleranceBefore = CMTimeMakeWithSeconds(1.0, NSEC_PER_SEC);
+      toleranceAfter = CMTimeMakeWithSeconds(0.5, NSEC_PER_SEC);
+  }
+
+  [self.player seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:^(BOOL finished) {
+    self.isSeeking = NO;
+    if (finished) {
+      LOG(PLATFORM, "Seek operation completed.");
+
+      if (self.seekTimer) {
+        dispatch_source_cancel(self.seekTimer);
+      }
+      self.seekTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+      dispatch_source_set_timer(self.seekTimer, dispatch_time(DISPATCH_TIME_NOW, 250 * NSEC_PER_MSEC), DISPATCH_TIME_FOREVER, 0);
+      dispatch_source_set_event_handler(self.seekTimer, ^{
+        dispatch_source_cancel(self.seekTimer);
+        self.seekTimer = nil;
+        self.isPausedForSeek = NO;
+        [self.player play];
+        LOG(PLATFORM, "Resuming playback after seek.");
+      });
+      dispatch_resume(self.seekTimer);
+    
+      CMTime preloadTime = CMTimeAdd(time, CMTimeMakeWithSeconds(0.5, NSEC_PER_SEC));
+      CVPixelBufferRef pixelBuffer = [self.videoOutput copyPixelBufferForItemTime:preloadTime itemTimeForDisplay:NULL];
+      if (pixelBuffer) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+          CVBufferRelease(pixelBuffer);
+        });
+      }
+    } else {
+      LOG(PLATFORM, "Seek operation failed.");
+    }
+  }];
 }
 
 - (CMTime)getDuration {
@@ -170,7 +240,6 @@
   CVPixelBufferRef pixelBuffer = [self.videoOutput copyPixelBufferForItemTime:currentTime itemTimeForDisplay:NULL];
 
   if (pixelBuffer == nullptr) {
-    // LOG(PLATFORM, "Pixel buffer not valid");
     if (self.texture) {
       SDL_FRect ca;
       ca.x = contentArea.x;

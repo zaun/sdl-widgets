@@ -30,9 +30,64 @@ namespace SGI {
 
   }
 
+  std::string FlatSlider::addChangeListener(const Widget::Callback& handler)
+  {
+    std::string id;
+    
+    do {
+      id = _generateShortCode();
+    } while (_changeHandelers.find(id) != _changeHandelers.end());
+    _changeHandelers[id] = handler;
+
+    return id;
+  }
+
+  void FlatSlider::removeChangeListener(const std::string& id)
+  {
+    _changeHandelers.erase(id);
+  }
+
   int FlatSlider::getValue()
   {
     return _value;
+  }
+
+  bool FlatSlider::processEvent(const SDL_Event *event)
+  {
+    SDL_Point mousePoint;
+    mousePoint.x = event->button.x;
+    mousePoint.y = event->button.y;
+
+    if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+      if (SDL_PointInRect(&mousePoint, &_handleRect)) {
+        _dragging = true;
+        setFocused(true);
+      }
+    }
+    
+    if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
+      _dragging = false;
+    }
+    
+    if (event->type == SDL_EVENT_MOUSE_MOTION && _dragging) {
+      if (_orientation == Orientation::Horizontal) {
+        double newValue = _minValue + ((mousePoint.x - getContentArea().x) / (double)getContentArea().w) * (_maxValue - _minValue);
+        setValue(newValue);
+        for (const auto& [id, handler] : _changeHandelers) {
+          handler(_root, _self);
+        }
+      } else {
+        double newValue = _minValue + ((mousePoint.y - getContentArea().y) / (double)getContentArea().h) * (_maxValue - _minValue);
+        setValue(newValue);
+        for (const auto& [id, handler] : _changeHandelers) {
+          handler(_root, _self);
+        }
+      }
+      return true;
+    }
+    
+    Widget::processEvent(event);
+    return false;
   }
 
   void FlatSlider::setMaxValue(int maxValue)

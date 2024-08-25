@@ -31,15 +31,15 @@ namespace SGI {
     
     do {
       id = _generateShortCode();
-    } while (_inputHandelers.find(id) != _inputHandelers.end());
-    _inputHandelers[id] = handler;
+    } while (_changeHandelers.find(id) != _changeHandelers.end());
+    _changeHandelers[id] = handler;
 
     return id;
   }
 
   void FlatInput::removeChangeListener(const std::string& id)
   {
-    _inputHandelers.erase(id);
+    _changeHandelers.erase(id);
   }
 
   std::string FlatInput::getFontName()
@@ -133,7 +133,7 @@ namespace SGI {
             _value.erase(_cursorIndex, 1);
             _updateLabel();
 
-            for (const auto& [id, handler] : _inputHandelers) {
+            for (const auto& [id, handler] : _changeHandelers) {
               if (handler(_root, _self)) {
                 ret = true;
               }
@@ -174,7 +174,7 @@ namespace SGI {
         _cursorIndex += 1;
         _updateLabel();
 
-        for (const auto& [id, handler] : _inputHandelers) {
+        for (const auto& [id, handler] : _changeHandelers) {
           if (handler(_root, _self)) {
             ret = true;
           }

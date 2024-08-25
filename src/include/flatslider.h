@@ -20,7 +20,12 @@ namespace SGI {
 
     ~FlatSlider();
 
+    std::string addChangeListener(const Widget::Callback& handler);
+    void removeChangeListener(const std::string& id);
+
     int getValue();
+
+    bool processEvent(const SDL_Event *event) override;
 
     void setMaxValue(int maxValue);
     void setMinValue(int minValue);
@@ -50,6 +55,8 @@ namespace SGI {
     bool _dragging = false;
 
     void _render(double deltaTime) override;
+
+    std::unordered_map<std::string, Callback> _changeHandelers;
 
   };
   using FlatSliderPtr = std::shared_ptr<SGI::FlatSlider>;

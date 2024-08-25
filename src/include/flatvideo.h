@@ -15,6 +15,8 @@ namespace SGI {
 
     void loadFile(std::string fullPath);
     void play();
+    void stop();
+    void seek(int time);
     void setLocationCallback(std::function<void(std::shared_ptr<Window>, std::shared_ptr<Widget>, float currentTime, float maxTime)> callback);
     void setRepeat(bool value);
     void setResourcePath(std::string path);

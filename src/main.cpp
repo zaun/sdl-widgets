@@ -75,9 +75,6 @@ int main(int argc, char* args[]) {
   v1->setRepeat(true);
   v1->play();
   v1->setLocationCallback([](SGI::WindowPtr window, SGI::WidgetPtr widget, float currentTime, float maxTime) {
-    if (!window) {
-      return;
-    }
     SGI::WidgetPtr sliderWidget = window->findFirst("hs1");
     if (!sliderWidget) {
       return;
@@ -95,6 +92,19 @@ int main(int argc, char* args[]) {
   SGI::FlatSliderPtr hs1 = SGI::FlatSlider::create();
   hs1->setName("hs1");
   hs1->setConstraintFixed(SGI::Widget::ConstraintType::Height, 20);
+  hs1->addChangeListener([](SGI::WindowPtr window, SGI::WidgetPtr widget)->bool {
+    SGI::WidgetPtr videoWidget = window->findFirst("v1");
+    if (!videoWidget) {
+      return false;
+    }
+
+    SGI::FlatVideoPtr video = std::dynamic_pointer_cast<SGI::FlatVideo>(videoWidget);
+    SGI::FlatSliderPtr slider = std::dynamic_pointer_cast<SGI::FlatSlider>(widget);
+
+    int time = slider->getValue();
+    video->seek(time / 100);
+    return false;
+  });
   sectionA->addChild(hs1);
 
   // SGI::FlatPanelPtr sectionA1 = SGI::FlatPanel::create();

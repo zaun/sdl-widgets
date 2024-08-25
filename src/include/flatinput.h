@@ -69,7 +69,7 @@ namespace SGI {
     void _updateLabel();
     void _updatePosition();
 
-    std::unordered_map<std::string, Callback> _inputHandelers;
+    std::unordered_map<std::string, Callback> _changeHandelers;
 
   };
   using FlatInputPtr = std::shared_ptr<SGI::FlatInput>;

@@ -44,6 +44,16 @@ namespace SGI {
     _video->play();
   }
 
+  void FlatVideo::stop()
+  {
+    _video->stop();
+  }
+
+  void FlatVideo::seek(int time)
+  {
+    _video->seek(time);
+  }
+
   void FlatVideo::setLocationCallback(std::function<void(std::shared_ptr<Window>, std::shared_ptr<Widget>, float currentTime, float maxTime)> callback)
   {
     if (!_video) {
