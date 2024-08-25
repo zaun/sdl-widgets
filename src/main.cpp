@@ -14,6 +14,7 @@
 #include "flattext.h"
 #include "flatvideo.h"
 #include "fontbook.h"
+#include "optiongroup.h"
 #include "panel.h"
 #include "window.h"
 
@@ -233,23 +234,29 @@ int main(int argc, char* args[]) {
   SGI::FlatTextPtr t1 = SGI::FlatText::create("This is a test :[fg;255;0;0;]:Red :[fg;0;255;0;]:Green :[fg;0;0;255;]:Blue :[fg;0;]:. Ставка :[fs;B;]:Lorem :[fp;20;]:Ipsum:[fp;16;]: is simply:[fs;b;]:\n\n:[fs;IU;]:dummy text of the:[fs;u;]: printing and:[fs;i;]: typesetting industry. :[fs;O;]:Lorem Ipsum has:[fs;o;]: been the industry's standard dummy text ever since the 1500s, when an :[fs;S;]:unknown printer:[fs;s;]: took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
   sectionB2->addChild(t1);
 
+  SGI::OptionGroupPtr og = SGI::OptionGroup::create();
+  og->setSpacing(SGI::Container::ChildSpacing::Around);
+  og->setMultiselect(true);
+  og->addChangeListener([](SGI::WindowPtr window, std::vector<SGI::FlatOptionPtr> widgets)->bool {
+    std::string selected = "";
+    for (auto w : widgets) {
+      selected += w->getName() + " ";
+    }
+
+    LOG(APP, "OptionGroup selected: %s", selected.c_str());
+    return false;
+  });
+  sectionB3->addChild(og);
+
   SGI::FlatOptionPtr o1 = SGI::FlatOption::create("Option 1");
   o1->setName("l1");
   o1->setConstraintFixed(SGI::Widget::ConstraintType::Width, 120);
-  sectionB3->addChild(o1);
+  og->addChild(o1);
 
   SGI::FlatOptionPtr o2 = SGI::FlatOption::create("Option 2");
-  o2->setName("l1");
+  o2->setName("l2");
   o2->setConstraintFixed(SGI::Widget::ConstraintType::Width, 120);
-  sectionB3->addChild(o2);
-
-  // SGI::FlatVideoPtr v1 = SGI::FlatVideo::create();
-  // v1->setName("v1");
-  // v1->setConstraintFixed(SGI::Widget::ConstraintType::Height, 200);
-  // v1->loadFile("video/test.mp4");
-  // v1->setRepeat(true);
-  // v1->play();
-  // sectionA1->addChild(v1);
+  og->addChild(o2);
 
   SGI::AudioPlayer::load("test1", "audio/test.wav");
   SGI::AudioPlayer::load("test2", "audio/test.ogg");

@@ -42,7 +42,12 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
   GIT_TAG main
 )
-FetchContent_MakeAvailable(SDL3 SDL3_image SDL3_ttf)
+FetchContent_Declare(
+  SDL3_net
+  GIT_REPOSITORY https://github.com/libsdl-org/SDL_net.git
+  GIT_TAG main
+)
+FetchContent_MakeAvailable(SDL3 SDL3_image SDL3_ttf SDL3_net)
 
 #
 # Audio
@@ -73,3 +78,15 @@ FetchContent_Declare(
   GIT_TAG master
 )
 FetchContent_MakeAvailable(libxmp)
+
+#
+# JSON
+#
+
+# Declare and fetch nlohmann/json
+FetchContent_Declare(
+  nlohmann_json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG v3.11.2 # Use the latest stable version or the version you need
+)
+FetchContent_MakeAvailable(nlohmann_json)

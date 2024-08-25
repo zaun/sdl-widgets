@@ -57,6 +57,8 @@ namespace SGI {
 
     std::string getName();
 
+    std::string getUUID();
+
     /**
      * Gets the shared pointer the the Window's renderer
      * 

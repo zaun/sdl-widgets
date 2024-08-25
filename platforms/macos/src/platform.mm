@@ -167,8 +167,6 @@
   [self.player seekToTime:time toleranceBefore:toleranceBefore toleranceAfter:toleranceAfter completionHandler:^(BOOL finished) {
     self.isSeeking = NO;
     if (finished) {
-      LOG(PLATFORM, "Seek operation completed.");
-
       if (self.seekTimer) {
         dispatch_source_cancel(self.seekTimer);
       }

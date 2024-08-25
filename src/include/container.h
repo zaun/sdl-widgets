@@ -9,6 +9,7 @@
 namespace SGI {
   class Container : public Widget {
   public:
+    friend class OptionGroup;
     friend class Panel;
     friend class Window;
 
@@ -37,7 +38,7 @@ namespace SGI {
      *
      * \param widget the widget to be added.
      */
-    void addChild(std::shared_ptr<Widget> widget);
+    virtual void addChild(WidgetPtr widget);
 
     /**
      * Find all Widgets in the Window with the requested name
@@ -48,7 +49,7 @@ namespace SGI {
      * \param name the name to search for
      * \returns a vector of matching Widgets
      */
-    std::vector<std::shared_ptr<Widget>> find(const std::string& name) const;
+    std::vector<WidgetPtr> find(const std::string& name) const;
 
     /**
      * Finds the 1st Widget in the Window with the requested name
@@ -56,7 +57,7 @@ namespace SGI {
      * \param name the name to search for
      * \returns the Widgets or nullptr
      */
-    std::shared_ptr<Widget> findFirst(const std::string& name) const;
+    WidgetPtr findFirst(const std::string& name) const;
 
     /**
      * Process a SDL_Event
@@ -71,7 +72,7 @@ namespace SGI {
      *
      * \param widget the widget to be removed.
      */
-    void removeChild(std::shared_ptr<Widget> widget);
+    virtual void removeChild(WidgetPtr widget);
 
     void setConstraint(ConstraintType constraint, int minValue, int maxValue) override;
 
@@ -96,7 +97,7 @@ namespace SGI {
     void _setBounds(SDL_Rect& bounds) override;
 
   private:
-    std::vector<std::shared_ptr<Widget>> _children;
+    std::vector<WidgetPtr> _children;
     ChildDirection _childDirection = Row;
 
     ChildSpacing _spacingType = ChildSpacing::Between;
@@ -109,7 +110,7 @@ namespace SGI {
     int _calculateChildrenBoundsRow();
     int _calculateChildrenBoundsColumn();
 
-    void _findRecursive(const std::string& name, std::vector<std::shared_ptr<Widget>>& result) const;
+    void _findRecursive(const std::string& name, std::vector<WidgetPtr>& result) const;
 
     bool _overflowTop = false;
     bool _overflowBottom = false;

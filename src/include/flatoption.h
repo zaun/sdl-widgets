@@ -22,6 +22,9 @@ namespace SGI {
 
     ~FlatOption();
 
+    std::string addChangeListener(const Widget::Callback& handler);
+    void removeChangeListener(const std::string& id);
+
     std::string getFontName();
     double getFontSize();
     std::string getLabel();
@@ -56,6 +59,8 @@ namespace SGI {
 
     void _render(double deltaTime) override;
     void _updateLabel();
+
+    std::unordered_map<std::string, Callback> _changeHandelers;
 
   };
   using FlatOptionPtr = std::shared_ptr<SGI::FlatOption>;

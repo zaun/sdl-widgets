@@ -66,6 +66,11 @@ namespace SGI {
     return _name;
   }
 
+  std::string Widget::getUUID()
+  {
+    return _uuid;
+  }
+
   std::shared_ptr<SDL_Renderer> Widget::getRenderer()
   {
     return _renderer;

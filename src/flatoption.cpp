@@ -31,6 +31,23 @@ namespace SGI {
     }
   }
 
+  std::string FlatOption::addChangeListener(const Widget::Callback& handler)
+  {
+    std::string id;
+    
+    do {
+      id = _generateShortCode();
+    } while (_changeHandelers.find(id) != _changeHandelers.end());
+    _changeHandelers[id] = handler;
+
+    return id;
+  }
+
+  void FlatOption::removeChangeListener(const std::string& id)
+  {
+    _changeHandelers.erase(id);
+  }
+
   std::string FlatOption::getFontName()
   {
     return _fontName;
@@ -58,6 +75,12 @@ namespace SGI {
       case SDL_EVENT_MOUSE_BUTTON_DOWN: {
         if (isMouseOver()) {
           _value = !_value;
+
+          for (const auto& [id, handler] : _changeHandelers) {
+            if (handler(_root, _self)) {
+              ret = true;
+            }
+          }
         }
       }
     }
