@@ -3,9 +3,6 @@
 #include <vorbis/vorbisfile.h>
 #include "debug.h"
 #include "audioplayer.h"
-#define MINIMP3_IMPLEMENTATION
-#include "vendor/minimp3.h"
-#include "vendor/minimp3_ex.h"
 
 namespace SGI {
   AudioPlayer* AudioPlayer::_instance = nullptr;
@@ -204,6 +201,176 @@ namespace SGI {
     return false;
   }
 
+  void AudioPlayer::newBuffer(const std::string& id)
+  {
+    initialize();
+
+    AudioData audioData;
+    audioData.start = nullptr;
+    audioData.pos = nullptr;
+    audioData.length = 0;
+    audioData.totalLength = 0;
+    audioData.playing = false;
+    audioData.repeating = false;
+
+    _instance->_audioDataMap[id] = audioData;
+  }
+
+  bool AudioPlayer::bufferAddTone(const std::string& id, int freq, int duration, int cycles, int delay)
+  {
+    initialize();
+
+    if (duration == 0 && delay == 0) {
+      return false;
+    }
+
+    auto it = _instance->_audioDataMap.find(id);
+    if (it == _instance->_audioDataMap.end()) {
+      ERROR(AUDIOPLAYER, "Buffer ID %s not found", id.c_str());
+      return false;
+    }
+    AudioData& audioData = it->second;
+
+    // LOG(AUDIOPLAYER, "bufferAddTone, freq: %d, dureation: %d, cycles: %d, dealy: %d", freq, duration, cycles, delay);
+
+    int sampleRate = _instance->_obtainedSpec.freq;
+    int numSamples = sampleRate * duration / 1000;
+    int fadeSamples = sampleRate * 5 / 1000;
+    int delaySamples = sampleRate * delay / 1000;
+    int cycleSamples = (numSamples + fadeSamples + delaySamples) * cycles;
+
+    Uint8* newBuffer = new Uint8[audioData.totalLength + cycleSamples * sizeof(float)];
+    if (!newBuffer) {
+      ERROR(AUDIOPLAYER, "Failed to allocate memory for tone buffer");
+      return false;
+    }
+
+    if (audioData.start) {
+      SDL_memcpy(newBuffer, audioData.start, audioData.totalLength);
+      delete[] audioData.start;
+    }
+
+    float* buffer = reinterpret_cast<float*>(newBuffer + audioData.totalLength);
+
+    for (int i = 0; i < cycles; ++i) {
+        for (int j = 0; j < numSamples; ++j) {
+            buffer[j] = std::sin(2.0f * M_PI * freq * j / sampleRate);
+        }
+
+        // Apply a fade-out on the last few samples to avoid chirps
+        for (int j = numSamples - fadeSamples; j < numSamples; ++j) {
+            float fadeFactor = static_cast<float>(numSamples - j) / fadeSamples;
+            buffer[j] *= fadeFactor;
+        }
+
+        buffer += numSamples;
+        SDL_memset(buffer, 0, sampleRate * delay / 1000 * sizeof(float));
+        buffer += sampleRate * delay / 1000;
+    }
+
+    audioData.start = newBuffer;
+    audioData.pos = newBuffer;
+    audioData.totalLength += cycleSamples * sizeof(float);
+    audioData.length = audioData.totalLength;
+
+    return true;
+  }
+
+  bool AudioPlayer::bufferAddMusic(const std::string& id, const std::string& music)
+  {
+    initialize();
+    
+    int octave = 4;  // Default octave
+    int length = 4;  // Default note length (quarter note)
+    int tempo = 120; // Default tempo
+    float quaterNodeDuration = 60000.0f / tempo;  // Duration of a quarter note in ms
+    float multiplier = 7.0f / 8.0f; // Default duration multiplier (MN)
+    
+    auto it = _instance->_audioDataMap.find(id);
+    if (it == _instance->_audioDataMap.end()) {
+      ERROR(AUDIOPLAYER, "Buffer ID %s not found", id.c_str());
+      return false;
+    }
+    AudioData& audioData = it->second;
+    
+    for (size_t i = 0; i < music.length(); ++i) {
+      char command = music[i];
+
+      if (command >= 'A' && command <= 'G') {
+        bool sharp = (i + 1 < music.length() && (music[i + 1] == '#' || music[i + 1] == '+'));
+        bool flat = (i + 1 < music.length() && music[i + 1] == '-');
+        if (sharp || flat) ++i;
+        
+        float frequency = _getNoteFrequency(command, octave, sharp, flat);
+        
+        if (i + 1 < music.length() && music[i + 1] == '.') {
+          multiplier += 0.5f;
+          ++i;
+        }
+
+        int noteDuration = static_cast<int>(4.0 / length * quaterNodeDuration);
+        int duration = static_cast<int>(noteDuration * multiplier);
+        int delay = noteDuration - duration;
+        // LOG(AUDIOPLAYER, "Length: %d, duration: %d", length, noteDuration);
+        bufferAddTone(id, static_cast<int>(frequency), duration, 1, delay);
+        multiplier = 7.0f / 8.0f; // Reset to default after note
+          
+      } else if (command == 'L') {
+        // Set the note length
+        if (i + 1 < music.length() && isdigit(music[i + 1])) {
+          length = music[++i] - '0';
+        }
+      } else if (command == 'O') {
+        // Set the octave
+        if (i + 1 < music.length() && isdigit(music[i + 1])) {
+          octave = music[++i] - '0';
+        }
+      } else if (command == 'N') {
+        // Play a note by number (0 is a rest)
+        if (i + 1 < music.length() && isdigit(music[i + 1])) {
+          int noteNumber = stoi(music.substr(i + 1, 2));
+          i += 2;
+          if (noteNumber == 0) {
+            int noteDuration = static_cast<int>(4 / length * quaterNodeDuration);
+            int duration = static_cast<int>(noteDuration * multiplier);
+            int delay = noteDuration - duration;
+            bufferAddTone(id, 0, noteDuration, 1, delay);
+          } else {
+            // Calculate frequency and add tone
+            float frequency = _calculateFrequencyFromNoteNumber(noteNumber);
+            bufferAddTone(id, static_cast<int>(frequency), static_cast<int>(quaterNodeDuration * multiplier), 1, 0);
+          }
+        }
+      } else if (command == 'P') {
+        // Play a rest
+        if (i + 1 < music.length() && isdigit(music[i + 1])) {
+          int restLength = music[++i] - '0';
+          int noteDuration = static_cast<int>(4 / restLength * quaterNodeDuration);
+          int duration = static_cast<int>(noteDuration * multiplier);
+          int delay = noteDuration - duration;
+          bufferAddTone(id, 0, noteDuration, 1, delay);
+        }
+      } else if (command == 'M') {
+        // Music control (MN, ML, MS)
+        if (i + 1 < music.length()) {
+          char mode = music[++i];
+          if (mode == 'N') multiplier = 7.0f / 8.0f;
+          else if (mode == 'L') multiplier = 1.0f;
+          else if (mode == 'S') multiplier = 3.0f / 4.0f;
+        }
+      } else if (command == 'T') {
+        // Set the tempo
+        if (i + 1 < music.length() && isdigit(music[i + 1])) {
+          tempo = stoi(music.substr(i + 1, 3));
+          i += 2;
+          quaterNodeDuration = 60000.0f / tempo;
+        }
+      }
+    }
+
+    return true;
+  }
+
   void AudioPlayer::play(const std::string& id, bool repeating)
   {
     initialize();
@@ -297,6 +464,28 @@ namespace SGI {
     }
 
     delete[] mixBuffer;
+  }
+
+  float AudioPlayer::_getNoteFrequency(char note, int octave, bool sharp, bool flat)
+  {
+    // Define frequencies for the 4th octave
+    static const std::map<char, float> baseFrequencies = {
+      {'C', 261.63f}, {'D', 293.66f}, {'E', 329.63f},
+      {'F', 349.23f}, {'G', 392.00f}, {'A', 440.00f}, {'B', 493.88f}
+    };
+    
+    float frequency = baseFrequencies.at(note);
+    if (sharp) frequency *= pow(2.0, 1.0/12.0); // Raise frequency by one semitone
+    if (flat)  frequency /= pow(2.0, 1.0/12.0); // Lower frequency by one semitone
+
+    return frequency * pow(2.0, octave - 4); // Adjust for octave
+  }
+
+  float AudioPlayer::_calculateFrequencyFromNoteNumber(int noteNumber)
+  {
+    // Use A4 (440 Hz) as reference
+    int relativeNote = noteNumber - 49; // 49th note is A4
+    return 440.0f * pow(2.0f, relativeNote / 12.0f);
   }
 
 }
