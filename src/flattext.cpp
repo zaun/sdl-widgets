@@ -55,7 +55,18 @@ namespace SGI {
 
   bool FlatText::processEvent(const SDL_Event *event)
   {
-
+    if (event->type == SDL_EVENT_MOUSE_WHEEL) {
+      SDL_Rect ca = getContentArea();
+      if (_totalHeight > ca.h) {
+        _totalOffset -= event->wheel.y * 3;
+        if (_totalOffset < 0) {
+          _totalOffset = 0;
+        }
+        if (_totalOffset > _totalHeight - ca.h) {
+          _totalOffset = _totalHeight - ca.h;
+        }
+      }
+    }
     return Widget::processEvent(event);
   }
 
@@ -104,7 +115,7 @@ namespace SGI {
     SDL_Rect ca = getContentArea();
     SDL_SetRenderClipRect(getRenderer().get(), &ca);
 
-    int yOffset = ca.y;
+    int yOffset = ca.y - _totalOffset;
     for (const auto& line : _lineTextures) {
       if (line.size() > 0) {
         int maxHeight = 0;
@@ -410,7 +421,7 @@ namespace SGI {
 
     if (!currentLine.empty()) {
       _lineTextures.push_back(currentLine);
+      _totalHeight += currentLineMaxHeight;
     }
-    LOG(TEXT, "Total Height: %d CA height: %d", _totalHeight, getContentArea().h);
   }
 }

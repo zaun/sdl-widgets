@@ -53,7 +53,8 @@ namespace SGI {
       int height;
     };
     std::vector<std::vector<DisplayTextures>> _lineTextures;
-    int _totalHeight;
+    int _totalHeight = 0;
+    int _totalOffset = 0;
 
     std::string _fontName = "default";
     double _fontSize = 16;
