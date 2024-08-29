@@ -16,7 +16,7 @@ namespace SGI {
 
   AudioPlayer::AudioPlayer()
   {
-    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+    if (!SDL_Init(SDL_INIT_AUDIO)) {
       ERROR(AUDIOPLAYER, "Failed to initialize SDL Audio: %s", SDL_GetError());
       return;
     }
@@ -33,7 +33,7 @@ namespace SGI {
       return;
     }
 
-    if (SDL_GetAudioStreamFormat(_stream, &_obtainedSpec, NULL) < 0) {
+    if (!SDL_GetAudioStreamFormat(_stream, &_obtainedSpec, NULL)) {
       ERROR(AUDIOPLAYER, "Failed to get audio spec: %s", SDL_GetError());
       SDL_DestroyAudioStream(_stream);
       return;
@@ -100,7 +100,7 @@ namespace SGI {
       Uint8* fileBuffer;
       Uint32 fileLength;
 
-      if (SDL_LoadWAV_IO(fio, SDL_TRUE, &fileSpec, &fileBuffer, &fileLength) < 0) {
+      if (!SDL_LoadWAV_IO(fio, SDL_TRUE, &fileSpec, &fileBuffer, &fileLength)) {
         ERROR(AUDIOPLAYER, "Failed to load WAV file %s: %s", filename.c_str(), SDL_GetError());
         return false;
       }
@@ -175,7 +175,7 @@ namespace SGI {
       Uint8* oggBuffer;
       int oggLength;
 
-      if (SDL_ConvertAudioSamples(&fileSpec, buffer, bufferSize, &_instance->_obtainedSpec, &oggBuffer, &oggLength) < 0) {
+      if (!SDL_ConvertAudioSamples(&fileSpec, buffer, bufferSize, &_instance->_obtainedSpec, &oggBuffer, &oggLength)) {
         ERROR(AUDIOPLAYER, "Failed to convert autiod format %s: %s", filename.c_str(), SDL_GetError());
         delete[] buffer;
         return false;
@@ -459,7 +459,7 @@ namespace SGI {
       }
     }
 
-    if (SDL_PutAudioStreamData(astream, mixBuffer, additional_amount) < 0) {
+    if (!SDL_PutAudioStreamData(astream, mixBuffer, additional_amount)) {
       ERROR(AUDIOPLAYER, "Failed to put audio stream data: %s", SDL_GetError());
     }
 

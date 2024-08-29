@@ -84,7 +84,7 @@ namespace SGI {
         LOG(FONTBOOK, "Added font %s from %s", key.c_str(), _instance->_fontFiles[id].c_str());
       }
     } else {
-      ERROR(FONTBOOK, "Error opening font: %s", TTF_GetError());
+      ERROR(FONTBOOK, "Error opening font: %s", SDL_GetError());
     }
   }
 
@@ -102,7 +102,7 @@ namespace SGI {
 
     int status = TTF_SizeUTF8(_instance->_fonts[key], text.c_str(), width, heigt);
     if (status == -1) {
-      ERROR(FONTBOOK, "Error measures text: %s", TTF_GetError());
+      ERROR(FONTBOOK, "Error measures text: %s", SDL_GetError());
       return false;
     }
 

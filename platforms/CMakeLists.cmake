@@ -1,5 +1,3 @@
-target_include_directories(${APP_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/platforms/include)
-
 # Add subdirectories for platform-specific builds
 if(APPLE)
     include(platforms/macos/CMakeLists.cmake)

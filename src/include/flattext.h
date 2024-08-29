@@ -20,6 +20,8 @@ namespace SGI {
     double getFontSize();
     std::string getValue();
 
+    bool processEvent(const SDL_Event *event) override;
+
     void setFontName(const std::string& fontName);
     void setFontSize(double fontSize);
     void setValue(const std::string& value);
@@ -51,6 +53,7 @@ namespace SGI {
       int height;
     };
     std::vector<std::vector<DisplayTextures>> _lineTextures;
+    int _totalHeight;
 
     std::string _fontName = "default";
     double _fontSize = 16;

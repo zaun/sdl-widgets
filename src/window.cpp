@@ -22,7 +22,7 @@ namespace SGI {
   {
     int imgFlags = IMG_INIT_PNG;
     if (!(IMG_Init(imgFlags) & imgFlags)) {
-      ERROR(App, "IMG_Init Error: %s", IMG_GetError());
+      ERROR(App, "IMG_Init Error: %s", SDL_GetError());
     }
 
     if (atexit([](){
@@ -103,7 +103,7 @@ namespace SGI {
     SDL_Surface* surface = IMG_Load(fullPath.c_str());
 
     if (!surface) {
-      LOG(TEXTURE, "Unable to load image %s: %s", fullPath.c_str(), IMG_GetError());
+      LOG(TEXTURE, "Unable to load image %s: %s", fullPath.c_str(), SDL_GetError());
       return false;
     }
 

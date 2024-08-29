@@ -19,7 +19,7 @@
 #include "window.h"
 
 int main(int argc, char* args[]) {
-  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+  if (!SDL_Init(SDL_INIT_VIDEO)) {
     ERROR(APP, "SDL_Init Error: %s", SDL_GetError());
     return 1;
   }
@@ -231,7 +231,7 @@ int main(int argc, char* args[]) {
   });
   sectionB1->addChild(s1);
 
-  SGI::FlatTextPtr t1 = SGI::FlatText::create("This is a test :[fg;255;0;0;]:Red :[fg;0;255;0;]:Green :[fg;0;0;255;]:Blue :[fg;0;]:. Ставка :[fs;B;]:Lorem :[fp;20;]:Ipsum:[fp;16;]: is simply:[fs;b;]:\n\n:[fs;IU;]:dummy text of the:[fs;u;]: printing and:[fs;i;]: typesetting industry. :[fs;O;]:Lorem Ipsum has:[fs;o;]: been the industry's standard dummy text ever since the 1500s, when an :[fs;S;]:unknown printer:[fs;s;]: took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
+  SGI::FlatTextPtr t1 = SGI::FlatText::create("This is a test :[fg;255;0;0;]:Red :[fg;0;255;0;]:Green :[fg;0;0;255;]:Blue :[fg;0;]:. Ставка :[fs;B;]:Lorem :[fp;20;]:Ipsum:[fp;16;]: is simply:[fs;b;]:\n\n:[fs;IU;]:dummy text of the:[fs;u;]: printing and:[fs;i;]: typesetting industry. :[fs;O;]:Lorem Ipsum has:[fs;o;]: been the industry's standard dummy text ever since the 1500s, when an :[fs;S;]:unknown printer:[fs;s;]: took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
   sectionB2->addChild(t1);
 
   SGI::OptionGroupPtr og = SGI::OptionGroup::create();
@@ -260,7 +260,10 @@ int main(int argc, char* args[]) {
 
   SGI::AudioPlayer::load("test1", "audio/test.wav");
   SGI::AudioPlayer::load("test2", "audio/test.ogg");
-  SGI::AudioPlayer::load("test3", "audio/test.m4a");
+  // SGI::AudioPlayer::load("test3", "audio/test.m4a");
+
+  // SGI::AudioPlayer::newBuffer("test1");
+  // SGI::AudioPlayer::bufferAddMusic("test1", "O3T120L2CO4CO3L6BGABO4L2CO3L2CL2AL1GL2CFL4EL6CDEL4FL3DL6O2BO3CDL4EL2C");
 
   bool quit = false;
   SDL_Event e;

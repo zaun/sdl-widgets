@@ -53,6 +53,12 @@ namespace SGI {
     return _value;
   }
 
+  bool FlatText::processEvent(const SDL_Event *event)
+  {
+
+    return Widget::processEvent(event);
+  }
+
   void FlatText::setFontName(const std::string& fontName)
   {
     _fontName = fontName;
@@ -270,7 +276,9 @@ namespace SGI {
     // Run through the tokens createing textures
     // splitting up tokes as need for line wrapping
     std::vector<DisplayTextures> currentLine;
+    int currentLineMaxHeight = 0;
     int currentLineWidth = 0;
+    _totalHeight = 0;
 
     for (const auto& token : _tokens) {
         std::string content = token.content;
@@ -307,6 +315,7 @@ namespace SGI {
                 FontBook::measure(token.fontName, token.fontPoints, chunk, &tokenWidth, &tokenHeight);
                 if (currentLineWidth + tokenWidth > getContentArea().w && !currentLine.empty()) {
                   _lineTextures.push_back(currentLine);
+                  _totalHeight += currentLineMaxHeight;
                   currentLine.clear();
                   currentLineWidth = 0;
                 }
@@ -317,6 +326,9 @@ namespace SGI {
                   SDL_Texture* texture = SDL_CreateTextureFromSurface(getRenderer().get(), surface.get());
                   if (texture) {
                     currentLine.push_back({texture, tokenWidth, tokenHeight});
+                    if (tokenHeight > currentLineMaxHeight) {
+                      currentLineMaxHeight = tokenHeight;
+                    }
                   } else {
                     ERROR(FLATTEXT, "Error creating texture: %s", SDL_GetError());
                   }
@@ -330,12 +342,17 @@ namespace SGI {
 
               if (isLineOrParagraphSeparator) {
                 _lineTextures.push_back(currentLine);
+                _totalHeight += currentLineMaxHeight;
                 currentLine.clear();
                 currentLineWidth = 0;
               } else {
                 FontBook::measure(token.fontName, token.fontPoints, utf8Character, &tokenWidth, &tokenHeight);
                 if (currentLineWidth + tokenWidth > getContentArea().w && !currentLine.empty()) {
                   _lineTextures.push_back(currentLine);
+                  if (tokenHeight > currentLineMaxHeight) {
+                    currentLineMaxHeight = tokenHeight;
+                  }
+                  _totalHeight += currentLineMaxHeight;
                   currentLine.clear();
                   currentLineWidth = 0;
                 }
@@ -345,6 +362,9 @@ namespace SGI {
                   SDL_Texture* texture = SDL_CreateTextureFromSurface(getRenderer().get(), surface.get());
                   if (texture) {
                     currentLine.push_back({texture, tokenWidth, tokenHeight});
+                    if (tokenHeight > currentLineMaxHeight) {
+                      currentLineMaxHeight = tokenHeight;
+                    }
                   } else {
                     ERROR(FLATTEXT, "Error creating texture: %s", SDL_GetError());
                   }
@@ -363,6 +383,10 @@ namespace SGI {
           FontBook::measure(token.fontName, token.fontPoints, chunk, &tokenWidth, &tokenHeight);
           if (currentLineWidth + tokenWidth > getContentArea().w && !currentLine.empty()) {
             _lineTextures.push_back(currentLine);
+            if (tokenHeight > currentLineMaxHeight) {
+              currentLineMaxHeight = tokenHeight;
+            }
+            _totalHeight += currentLineMaxHeight;
             currentLine.clear();
             currentLineWidth = 0;
           }
@@ -387,5 +411,6 @@ namespace SGI {
     if (!currentLine.empty()) {
       _lineTextures.push_back(currentLine);
     }
+    LOG(TEXT, "Total Height: %d CA height: %d", _totalHeight, getContentArea().h);
   }
 }
