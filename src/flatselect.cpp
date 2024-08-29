@@ -87,7 +87,7 @@ namespace SGI {
         _mouseOverOptionIndex = -1;
       }
     } else if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-      if (_isMouseOverOverlay() && _mouseOverOptionIndex != -1) {
+      if (_opened && _isMouseOverOverlay() && _mouseOverOptionIndex != -1) {
         _value = _options[_mouseOverOptionIndex];
         _updateLabel();
         _opened = false;
