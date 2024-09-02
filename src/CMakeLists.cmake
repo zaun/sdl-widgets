@@ -7,6 +7,7 @@ set(LIBRARY_SOURCES
   ${CMAKE_SOURCE_DIR}/src/container.cpp
   ${CMAKE_SOURCE_DIR}/src/flat.cpp
   ${CMAKE_SOURCE_DIR}/src/flatbutton.cpp
+  ${CMAKE_SOURCE_DIR}/src/flatdivider.cpp
   ${CMAKE_SOURCE_DIR}/src/flatinput.cpp
   ${CMAKE_SOURCE_DIR}/src/flatlabel.cpp
   ${CMAKE_SOURCE_DIR}/src/flatpanel.cpp

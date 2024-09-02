@@ -5,6 +5,7 @@
 #include "button.h"
 #include "debug.h"
 #include "flatbutton.h"
+#include "flatdivider.h"
 #include "flatinput.h"
 #include "flatlabel.h"
 #include "flatpanel.h"
@@ -67,6 +68,8 @@ int main(int argc, char* args[]) {
   lblSidebarTitle->setJustification(SGI::FlatLabel::TextJustification::Center);
   sidebar->addChild(lblSidebarTitle);
   
+  SGI::FlatDividerPtr div = SGI::FlatDivider::create();
+  sidebar->addChild(div);
 
   SGI::FlatPanelPtr sectionA = SGI::FlatPanel::create();
   sectionA->setName("sectionA");
