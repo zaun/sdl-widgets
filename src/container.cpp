@@ -65,8 +65,10 @@ namespace SGI {
     bool overChild = false;
 
     for (size_t i = 0; i < _children.size(); ++i) {
-      if(_children[i]->processEvent(event)) {
-        stop = true;
+      if (!stop) {
+        if(_children[i]->processEvent(event)) {
+          stop = true;
+        }
       }
       if (_children[i]->_mouseOver) {
         overChild = true;
@@ -105,9 +107,26 @@ namespace SGI {
     }
   }
 
-  void Container::setConstraint(ConstraintType constraint, int minValue, int maxValue)
+  void Container::setConstraint(Widget::ConstraintType constraint, int minValue, int maxValue)
   {
     Widget::setConstraint(constraint, minValue, maxValue);
+    _calculateChildrenBounds();
+  }
+
+  void Container::setConstraint(Container::ConstraintType constraint, int minValue, int maxValue)
+  {
+    switch(constraint) {
+      case Container::ConstraintType::Height:
+        Widget::setConstraint(Widget::ConstraintType::Width, minValue, maxValue); 
+        break;
+      case Container::ConstraintType::Width:
+        Widget::setConstraint(Widget::ConstraintType::Height, minValue, maxValue); 
+        break;
+      case Container::ConstraintType::Spacing:
+        _spaceingConstraint.minValue = minValue;
+        _spaceingConstraint.maxValue = maxValue;
+        break;
+    }
     _calculateChildrenBounds();
   }
 
@@ -182,11 +201,23 @@ namespace SGI {
     int widthZero = 0;
     int heightZero = 0;
     for (size_t i = 0; i < numChildren; ++i) {
+      int width = _children[i]->_constraints.width.minValue;
+      int height = _children[i]->_constraints.height.minValue;
+
+      if (_children[i]->_constraints.width.preferredValue > _children[i]->_constraints.width.minValue &&
+          _children[i]->_constraints.width.preferredValue < _children[i]->_constraints.width.maxValue) {
+        width = _children[i]->_constraints.width.preferredValue;
+      }
+      if (_children[i]->_constraints.height.preferredValue > _children[i]->_constraints.height.minValue &&
+          _children[i]->_constraints.height.preferredValue < _children[i]->_constraints.height.maxValue) {
+        height = _children[i]->_constraints.height.preferredValue;
+      }
+
       SDL_Rect childRect;
       childRect.x = 0;
       childRect.y = 0;
-      childRect.w = _children[i]->_constraints.width.minValue;
-      childRect.h = _children[i]->_constraints.height.minValue;
+      childRect.w = width;
+      childRect.h = height;
       _children[i]->_setBounds(childRect);
       widthLeft -= childRect.w;
       heightLeft -= childRect.h;
@@ -273,8 +304,11 @@ namespace SGI {
           bool didGrow = false;
           if (childRects[i].w + growBy <= _children[i]->_constraints.width.maxValue &&
               contentWidth + childRects[i].w + growBy <= parentWidth) {
-            childRects[i].w += growBy;
-            didGrow = true;
+            if (_children[i]->_constraints.width.preferredValue == -1 ||
+                childRects[i].w + growBy < _children[i]->_constraints.width.preferredValue) {
+              childRects[i].w += growBy;
+              didGrow = true;
+            }
           } else if (childRects[i].w + growBy > _children[i]->_constraints.width.maxValue &&
                     childRects[i].w < _children[i]->_constraints.width.maxValue &&
                     contentWidth + _children[i]->_constraints.width.maxValue <= parentWidth) {
@@ -343,10 +377,6 @@ namespace SGI {
       }
 
       childRects[i].y = _contentArea.y + (parentHeight - childRects[i].h) / 2;
-      if (childRects[i].y < 0) {
-        childRects[i].y = 0;
-      }
-
       _children[i]->_setBounds(childRects[i]);
     }
 
@@ -409,8 +439,11 @@ namespace SGI {
           bool didGrow = false;
           if (childRects[i].h + growBy <= _children[i]->_constraints.height.maxValue &&
               contentHeight + childRects[i].h + growBy <= parentHeight) {
-            childRects[i].h += growBy;
-            didGrow = true;
+            if (_children[i]->_constraints.height.preferredValue == -1 ||
+                childRects[i].h + growBy < _children[i]->_constraints.height.preferredValue) {
+              childRects[i].h += growBy;
+              didGrow = true;
+            }
           } else if (childRects[i].h + growBy > _children[i]->_constraints.height.maxValue &&
                      childRects[i].h < _children[i]->_constraints.height.maxValue &&
                      contentHeight + childRects[i].h + _children[i]->_constraints.height.maxValue <= parentHeight) {
@@ -473,10 +506,6 @@ namespace SGI {
         : childRects[i - 1].y + childRects[i - 1].h + _spacing;
 
       childRects[i].x = _contentArea.x + (parentWidth - childRects[i].w) / 2;
-      if (childRects[i].x < 0) {
-        childRects[i].x = 0;
-      }
-
       _children[i]->_setBounds(childRects[i]);
     }
 
@@ -502,9 +531,18 @@ namespace SGI {
   void Container::_render(double deltaTime)
   {
     Widget::_render(deltaTime);
+    bool dirty = false;
     for (size_t i = 0; i < _children.size(); ++i) {
       _children[i]->_render(deltaTime);
+      if (_children[i]->_dirty) {
+        _children[i]->_dirty = false;
+        dirty = true;
+      }
       SDL_SetRenderClipRect(_renderer.get(), NULL);
+    }
+
+    if (dirty) {
+      _calculateChildrenBounds();
     }
   }
 

@@ -58,8 +58,15 @@ int main(int argc, char* args[]) {
   SGI::FlatPanelPtr sidebar = SGI::FlatPanel::create();
   sidebar->setName("sidebar");
   sidebar->setDirection(SGI::Container::ChildDirection::Column);
-  sidebar->setSpacing(SGI::Container::ChildSpacing::Around);
+  sidebar->setSpacing(SGI::Container::ChildSpacing::Between);
   win->getSidebar()->addChild(sidebar);
+
+  SGI::FlatLabelPtr lblSidebarTitle = SGI::FlatLabel::create("Widgets");
+  lblSidebarTitle->setName("sidebarTitle");
+  lblSidebarTitle->setFontSize(36);
+  lblSidebarTitle->setJustification(SGI::FlatLabel::TextJustification::Center);
+  sidebar->addChild(lblSidebarTitle);
+  
 
   SGI::FlatPanelPtr sectionA = SGI::FlatPanel::create();
   sectionA->setName("sectionA");
@@ -119,6 +126,7 @@ int main(int argc, char* args[]) {
   sectionA2->setName("sectionA");
   sectionA2->setConstraintFixed(SGI::Widget::ConstraintType::Height, 50);
   sectionA2->setSpacing(SGI::Container::ChildSpacing::Around);
+  sectionA2->setConstraint(SGI::Container::ConstraintType::Spacing, 20, 20);
   sectionA->addChild(sectionA2);
 
   SGI::FlatPanelPtr sectionB = SGI::FlatPanel::create();
@@ -147,6 +155,7 @@ int main(int argc, char* args[]) {
 
   SGI::FlatButtonPtr b1 = SGI::FlatButton::create("Play WAV");
   b1->setName("b1");
+  b1->setConstraintMinimum(SGI::Widget::ConstraintType::Width, 110);
   b1->addMouseListener(SGI::Widget::MouseEventType::Click, [](SGI::WindowPtr window, SGI::WidgetPtr widget, uint8_t button)->bool {
     SGI::FlatButtonPtr btn = std::dynamic_pointer_cast<SGI::FlatButton>(widget);
     if (SGI::AudioPlayer::isPlaying("test1")) {
@@ -162,6 +171,7 @@ int main(int argc, char* args[]) {
 
   SGI::FlatButtonPtr b2 = SGI::FlatButton::create("Play OGG");
   b2->setName("b2");
+  b2->setConstraintMinimum(SGI::Widget::ConstraintType::Width, 110);
   b2->addMouseListener(SGI::Widget::MouseEventType::Click, [](SGI::WindowPtr window, SGI::WidgetPtr widget, uint8_t button)->bool {
     SGI::FlatButtonPtr btn = std::dynamic_pointer_cast<SGI::FlatButton>(widget);
     if (SGI::AudioPlayer::isPlaying("test2")) {
@@ -177,7 +187,7 @@ int main(int argc, char* args[]) {
 
   SGI::FlatButtonPtr b3 = SGI::FlatButton::create("Open Sidebar");
   b3->setName("b3");
-  b3->setConstraintFixed(SGI::Widget::ConstraintType::Width, 130);
+  b3->setConstraintMinimum(SGI::Widget::ConstraintType::Width, 130);
   b3->addMouseListener(SGI::Widget::MouseEventType::Click, [](SGI::WindowPtr window, SGI::WidgetPtr widget, uint8_t button)->bool {
     SGI::FlatButtonPtr btn = std::dynamic_pointer_cast<SGI::FlatButton>(widget);
     if (window->isSidebarOpen()) {

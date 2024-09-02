@@ -73,6 +73,8 @@ namespace SGI {
 
     bool isSidebarOpen();
 
+    bool isMouseOverSidebar();
+
     bool processEvent(const SDL_Event *event) override;
 
     void removeCursor(CursorType cursorType);

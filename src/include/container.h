@@ -26,6 +26,12 @@ namespace SGI {
       Around, //  items are evenly distributed in the line with equal space around them
     };
 
+    enum ConstraintType {
+      Width,
+      Height,
+      Spacing,
+    };
+
     static std::shared_ptr<Container> create();
 
     ~Container() { };
@@ -74,7 +80,9 @@ namespace SGI {
      */
     virtual void removeChild(WidgetPtr widget);
 
-    void setConstraint(ConstraintType constraint, int minValue, int maxValue) override;
+    void setConstraint(Widget::ConstraintType constraint, int minValue, int maxValue) override;
+
+    void setConstraint(Container::ConstraintType constraint, int minValue, int maxValue);
 
     void setDirection(ChildDirection direction);
 

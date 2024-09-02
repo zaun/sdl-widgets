@@ -57,7 +57,7 @@ namespace SGI {
   {
     if (event->type == SDL_EVENT_MOUSE_WHEEL) {
       SDL_Rect ca = getContentArea();
-      if (_totalHeight > ca.h) {
+      if (isMouseOver() && _totalHeight > ca.h) {
         _totalOffset -= event->wheel.y * 3;
         if (_totalOffset < 0) {
           _totalOffset = 0;

@@ -18,8 +18,9 @@ namespace SGI {
     friend bool operator==(const Widget& lhs, const Widget& rhs);
 
     struct Constraint {
-      unsigned int minValue = 0;
-      unsigned int maxValue = std::numeric_limits<unsigned int>::max();
+      int minValue = 0;
+      int maxValue = std::numeric_limits<int>::max();
+      int preferredValue = 0;
     };
 
     enum ConstraintType {
@@ -128,6 +129,11 @@ namespace SGI {
     SDL_Rect _bounds;
 
     struct {
+      Constraint width;
+      Constraint height;
+    } _constraints;
+
+    struct {
       unsigned int top = 0;
       unsigned int bottom = 0;
       unsigned int left = 0;
@@ -135,6 +141,12 @@ namespace SGI {
     } _padding;
 
     bool _focused;
+
+    /**
+     * If dirty is true, the parent container will
+     * be forece to re-calculate all the child's bounds
+     */
+    bool _dirty = false;
 
     std::unordered_map<Uint8, bool> _mouseButtonState;
 
@@ -146,11 +158,6 @@ namespace SGI {
 
   private:
     void _checkMouseInBounds();
-
-    struct {
-      Constraint width;
-      Constraint height;
-    } _constraints;
 
     /**
      * The contentArea of the widget

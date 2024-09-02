@@ -16,6 +16,7 @@ set(LIBRARY_SOURCES
   ${CMAKE_SOURCE_DIR}/src/flattext.cpp
   ${CMAKE_SOURCE_DIR}/src/flatvideo.cpp
   ${CMAKE_SOURCE_DIR}/src/fontbook.cpp
+  ${CMAKE_SOURCE_DIR}/src/i18n.cpp
   ${CMAKE_SOURCE_DIR}/src/optiongroup.cpp
   ${CMAKE_SOURCE_DIR}/src/panel.cpp
   ${CMAKE_SOURCE_DIR}/src/state.cpp

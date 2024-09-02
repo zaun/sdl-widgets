@@ -66,6 +66,7 @@ namespace SGI {
     if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
       if (isMouseOver()) {
         _opened = !_opened;
+        return true;
       } else if (_opened && !_isMouseOverOverlay()) {
         _opened = false;
       }
@@ -79,10 +80,12 @@ namespace SGI {
           _optionsScrollOffset = _optionsHeight - _optionsContent.h;
         }
         _updateSelected();
+        return true;
       }
     } else if (event->type == SDL_EVENT_MOUSE_MOTION) {
       if (_isMouseOverOverlay()) {
         _updateSelected();
+        return true;
       } else {
         _mouseOverOptionIndex = -1;
       }
@@ -94,9 +97,16 @@ namespace SGI {
         _mouseOverOptionIndex = -1;
         _optionsScrollOffset = 0;
 
+        bool stop = false;
         for (const auto& [id, handler] : _inputHandelers) {
-          handler(_root, _self);
+          if (!stop) {
+            if (handler(_root, _self)) {
+              stop = true;
+            }
+          }
         }
+
+        return stop;
       }
     }
     return Widget::processEvent(event);

@@ -174,6 +174,18 @@ namespace SGI {
     return _sidebarState != SidebarState::CLOSED;
   }
 
+  bool Window::isMouseOverSidebar()
+  {
+    float mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+    if (mouseX > _sidebarBounds.x && mouseX < _sidebarBounds.x + _sidebarBounds.w &&
+        mouseY > _sidebarBounds.y && mouseY < _sidebarBounds.y + _sidebarBounds.h) {
+      return true;
+    }
+    return false;
+  }
+
+
   bool Window::processEvent(const SDL_Event *event)
   {
     SDL_Window* win = SDL_GetWindowFromEvent(event);
@@ -184,7 +196,11 @@ namespace SGI {
       return false;
     }
 
-    return Container::processEvent(event);
+    if (_sidebarState == SidebarState::CLOSED || !isMouseOverSidebar()) {
+      return Container::processEvent(event);
+    } else {
+      return _sidebarContainer->processEvent(event);
+    }
   }
 
   void Window::removeCursor(CursorType cursorType)

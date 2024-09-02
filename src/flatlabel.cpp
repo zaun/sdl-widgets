@@ -145,5 +145,8 @@ namespace SGI {
     }
 
     SDL_GetTextureSize(_textTexture, &_textWidth, &_textHeight);
+    _constraints.width.preferredValue = _textWidth + _padding.left + _padding.right;
+    _constraints.height.preferredValue = _textHeight + _padding.top + _padding.bottom;
+    _dirty = true;
   }
 }

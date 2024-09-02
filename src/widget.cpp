@@ -145,11 +145,11 @@ namespace SGI {
   void Widget::setConstraint(ConstraintType constraint, int minValue, int maxValue)
   {
     switch(constraint) {
-      case Width:
+      case ConstraintType::Width:
         _constraints.width.minValue = minValue;
         _constraints.width.maxValue = maxValue;
         break;
-      case Height:
+      case ConstraintType::Height:
         _constraints.height.minValue = minValue;
         _constraints.height.maxValue = maxValue;
         break;
@@ -163,7 +163,7 @@ namespace SGI {
 
   void Widget::setConstraintMinimum(ConstraintType constraint, int value)
   {
-    setConstraint(constraint, value, std::numeric_limits<unsigned int>::max());
+    setConstraint(constraint, value, std::numeric_limits<int>::max());
   }
 
   void Widget::setConstraintMaximum(ConstraintType constraint, int value)
@@ -173,7 +173,7 @@ namespace SGI {
 
   void Widget::setConstraintAuto(ConstraintType constraint)
   {
-    setConstraint(constraint, 0, std::numeric_limits<unsigned int>::max());
+    setConstraint(constraint, 0, std::numeric_limits<int>::max());
   }
 
   void Widget::setFocused(bool value)

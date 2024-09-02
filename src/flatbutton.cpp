@@ -12,8 +12,8 @@ namespace SGI {
   {
     std::shared_ptr<FlatButton> widget = std::make_shared<FlatButton>(FlatButton());
     widget->_self = widget;
-    widget->setConstraintFixed(SGI::Widget::ConstraintType::Width, 100);
-    widget->setConstraintFixed(SGI::Widget::ConstraintType::Height, 36);
+    widget->setConstraintMinimum(SGI::Widget::ConstraintType::Width, 100);
+    widget->setConstraintMinimum(SGI::Widget::ConstraintType::Height, 36);
     widget->setPadding(12, 12, 6, 6);
 
     return widget;
@@ -170,6 +170,8 @@ namespace SGI {
       return;
     }
 
+    _constraints.width.preferredValue = -1;
+
     if (_textTexture != nullptr) {
       SDL_DestroyTexture(_textTexture);
     }
@@ -216,6 +218,8 @@ namespace SGI {
     }
 
     SDL_GetTextureSize(_textTexture, &_textWidth, &_textHeight);
+    _constraints.width.preferredValue = _textWidth + _padding.left + _padding.right;
+    _dirty = true;
   }
 
 }
