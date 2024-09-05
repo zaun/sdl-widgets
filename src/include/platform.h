@@ -10,6 +10,7 @@ namespace SGI {
   class Platform {
     public:
       static std::string getUserDocumentDirectory();
+      static bool createNotification(const std::string& title, const std::string& message);
 
       class Video {
         public:

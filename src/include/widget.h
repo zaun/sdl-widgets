@@ -85,13 +85,13 @@ namespace SGI {
 
     virtual void setConstraint(ConstraintType constraint, int minValue, int maxValue);
 
-    void setConstraintFixed(ConstraintType constraint, int value);
+    virtual void setConstraintFixed(ConstraintType constraint, int value);
 
-    void setConstraintMinimum(ConstraintType constraint, int value);
+    virtual void setConstraintMinimum(ConstraintType constraint, int value);
 
-    void setConstraintMaximum(ConstraintType constraint, int value);
+    virtual void setConstraintMaximum(ConstraintType constraint, int value);
 
-    void setConstraintAuto(ConstraintType constraint);
+    virtual void setConstraintAuto(ConstraintType constraint);
     
     void setFocused(bool value = true);
 
@@ -155,6 +155,9 @@ namespace SGI {
     virtual void _renderOverlay(double deltaTime) { };
     
     virtual void _setBounds(SDL_Rect& bounds);
+
+    virtual void _setRoot(std::shared_ptr<SGI::Window> root);
+    virtual void _setRenderer(std::shared_ptr<SDL_Renderer> renderer);
 
   private:
     void _checkMouseInBounds();

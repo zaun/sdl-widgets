@@ -5,6 +5,7 @@ find_library(COREMEDIA CoreMedia)
 find_library(COREVIDEO CoreVideo)
 find_library(FOUNDATION Foundation)
 find_library(AVFOUNDATION AVFoundation)
+find_library(USERNOTIFICATIONS UserNotifications)
 
 if (ENABLE_STATIC) 
   target_sources(${APP_NAME}-static PRIVATE ${CMAKE_SOURCE_DIR}/platforms/macos/src/platform.mm)
@@ -15,6 +16,7 @@ if (ENABLE_STATIC)
     ${COREVIDEO}
     ${FOUNDATION}
     ${AVFOUNDATION}
+    ${USERNOTIFICATIONS}
   )
 endif()
 if (ENABLE_SHARED) 
@@ -26,6 +28,7 @@ if (ENABLE_SHARED)
     ${COREVIDEO}
     ${FOUNDATION}
     ${AVFOUNDATION}
+    ${USERNOTIFICATIONS}
   )
 endif()
 if(ENABLE_DEMO)
@@ -37,11 +40,23 @@ if(ENABLE_DEMO)
     ${COREVIDEO}
     ${FOUNDATION}
     ${AVFOUNDATION}
+    ${USERNOTIFICATIONS}
+  )
+endif()
+if(ENABLE_TESTS)
+  target_sources(${APP_NAME}-test PRIVATE ${CMAKE_SOURCE_DIR}/platforms/macos/src/platform.mm)
+  target_link_libraries(${APP_NAME}-test
+    ${COREFOUNDATION_LIBRARY}
+    ${CORESERVICES_LIBRARY}
+    ${COREMEDIA}
+    ${COREVIDEO}
+    ${FOUNDATION}
+    ${AVFOUNDATION}
+    ${USERNOTIFICATIONS}
   )
 endif()
 
 if(ENABLE_DEMO)
-
   # macOS specific settings
   set(MACOSX_BUNDLE_NAME ${APP_NAME})
   set(MACOSX_BUNDLE_IDENTIFIER "com.mycompany.myapp")
@@ -70,4 +85,11 @@ if(ENABLE_DEMO)
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_BINARY_DIR}/resources" "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources"
     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/platforms/macos/AppIcon.icns" "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources"
   )
+
+  if(CODESIGN_IDENTITY)
+    add_custom_command(TARGET ${APP_NAME} POST_BUILD
+      # Conditional code signing
+      COMMAND codesign --force --deep --sign "${CODESIGN_IDENTITY}" --entitlements ${ENTITLEMENTS} "$<TARGET_BUNDLE_DIR:${APP_NAME}>"
+    )
+  endif()
 endif()

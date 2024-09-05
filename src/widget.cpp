@@ -223,6 +223,16 @@ namespace SGI {
     _updateContentArea();
   }
 
+  void Widget::_setRoot(std::shared_ptr<SGI::Window> root)
+  {
+    _root = root;
+  }
+
+  void Widget::_setRenderer(std::shared_ptr<SDL_Renderer> renderer)
+  {
+    _renderer = renderer;
+  }
+
   void Widget::_checkMouseInBounds()
   {
     float mouseX, mouseY;

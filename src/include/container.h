@@ -15,15 +15,21 @@ namespace SGI {
 
     friend bool operator==(const Widget& lhs, const Widget& rhs);
 
-    enum ChildDirection {
+    enum Direction {
       Column,
       Row,
       Stack,
     };
 
-    enum ChildSpacing {
-      Between, // items are evenly distributed in the line; first item is on the start line, last item on the end line
-      Around, //  items are evenly distributed in the line with equal space around them
+    enum SpaceContent {
+      Around,   // items are evenly distributed in the line with equal space around them
+      Between,  // items are evenly distributed in the line; first item is on the start line, last item on the end line
+    };
+
+    enum JustifyContent {
+      Center,   // items are centered 
+      End,      // items are packed toward the end
+      Start,    // items are packed toward the start
     };
 
     enum ConstraintType {
@@ -84,16 +90,39 @@ namespace SGI {
 
     void setConstraint(Container::ConstraintType constraint, int minValue, int maxValue);
 
-    void setDirection(ChildDirection direction);
+    void setConstraintFixed(Widget::ConstraintType constraint, int value) override;
+
+    void setConstraintFixed(Container::ConstraintType constraint, int value);
+
+    void setConstraintMinimum(Widget::ConstraintType constraint, int value) override;
+
+    void setConstraintMinimum(Container::ConstraintType constraint, int value);
+
+    void setConstraintMaximum(Widget::ConstraintType constraint, int value) override;
+
+    void setConstraintMaximum(Container::ConstraintType constraint, int value);
+
+    void setConstraintAuto(Widget::ConstraintType constraint) override;
+
+    void setConstraintAuto(Container::ConstraintType constraint);
+
+    void setDirection(Direction direction);
 
     void setPadding(unsigned int left, unsigned int right, unsigned int top, unsigned int bottom) override;
 
     /**
-     * Sets the type spacing around child widgets
+     * Sets the type of spacing around child widgets
      * 
      * \param type the spacing type.
      */
-    void setSpacing(ChildSpacing type);
+    void setSpaceContent(SpaceContent type);
+
+    /**
+     * Sets the justification child widgets
+     * 
+     * \param type the justify type.
+     */
+    void setJustifyContent(JustifyContent type);
 
     virtual void setTheme(const std::string& name);
 
@@ -103,12 +132,15 @@ namespace SGI {
     void _render(double deltaTime) override;
     void _renderOverlay(double deltaTime) override;
     void _setBounds(SDL_Rect& bounds) override;
+    void _setRoot(std::shared_ptr<SGI::Window> root) override;
+    void _setRenderer(std::shared_ptr<SDL_Renderer> renderer) override;
 
   private:
     std::vector<WidgetPtr> _children;
-    ChildDirection _childDirection = Row;
+    Direction _Direction = Row;
 
-    ChildSpacing _spacingType = ChildSpacing::Between;
+    SpaceContent _spaceContentType = SpaceContent::Between;
+    JustifyContent _justifyContentType = JustifyContent::Start;
     Constraint _spaceingConstraint;
     int _spacing = 0;
 
@@ -117,6 +149,7 @@ namespace SGI {
     void _calculateChildrenBounds();
     int _calculateChildrenBoundsRow();
     int _calculateChildrenBoundsColumn();
+    int _calculateChildrenBoundsStack();
 
     void _findRecursive(const std::string& name, std::vector<WidgetPtr>& result) const;
 

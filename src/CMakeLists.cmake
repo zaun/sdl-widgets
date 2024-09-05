@@ -27,7 +27,7 @@ set(LIBRARY_SOURCES
 
 # Define executable source
 set(DEMO_SOURCES
-  ${CMAKE_SOURCE_DIR}/src/main.cpp
+  ${CMAKE_SOURCE_DIR}/src/demo/main.cpp
 )
 
 # Create the static library

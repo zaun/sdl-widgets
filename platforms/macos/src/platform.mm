@@ -8,6 +8,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <Foundation/Foundation.h>
+#import <UserNotifications/UserNotifications.h>
 
 @interface VideoPlayer : NSObject
 
@@ -311,6 +312,54 @@ namespace SGI {
 
     std::string homeDir(pw->pw_dir);
     return homeDir + "/Documents";
+  }
+
+  bool Platform::createNotification(const std::string& title, const std::string& message)
+  { 
+    __block bool isGranted = false;
+
+    dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+
+    @autoreleasepool {
+      UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+
+      [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionSound)
+                            completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        if (error != nil) {
+          LOG(PLATFORM, "Error requesting notification permission: %s", error.localizedDescription.UTF8String);
+        } else {
+          if (granted) {
+            UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+            content.title = [NSString stringWithUTF8String:title.c_str()];
+            content.body = [NSString stringWithUTF8String:message.c_str()];
+            content.sound = [UNNotificationSound defaultSound];
+
+            UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:NO];
+
+            NSString *identifier = [NSString stringWithFormat:@"%@", [NSUUID UUID].UUIDString];
+            UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];
+
+            [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+              if (error != nil) {
+                LOG(PLATFORM, "Error scheduling notification: %s", error.localizedDescription.UTF8String);
+              }
+            }];
+
+            [content release];
+            isGranted = true;
+          } else {
+            LOG(PLATFORM, "Permission not granted for notifications");
+          }
+        }
+
+        dispatch_semaphore_signal(sema);
+      }];
+
+      // Wait for the semaphore to be signaled before returning
+      dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+    }
+
+    return isGranted;
   }
 
   Platform::Video::Video(const std::string& absolutePath)

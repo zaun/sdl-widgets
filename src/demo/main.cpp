@@ -19,6 +19,27 @@
 #include "panel.h"
 #include "window.h"
 
+SGI::WidgetPtr createSidebar()
+{
+  SGI::FlatPanelPtr sidebar = SGI::FlatPanel::create();
+  sidebar->setName("sidebar");
+  sidebar->setDirection(SGI::Container::Direction::Column);
+  sidebar->setSpaceContent(SGI::Container::SpaceContent::Between);
+  sidebar->setJustifyContent(SGI::Container::JustifyContent::Start);
+  sidebar->setConstraintFixed(SGI::Container::ConstraintType::Spacing, 10);
+
+  SGI::FlatLabelPtr lblSidebarTitle = SGI::FlatLabel::create("Widgets");
+  lblSidebarTitle->setName("sidebarTitle");
+  lblSidebarTitle->setFontSize(36);
+  lblSidebarTitle->setJustification(SGI::FlatLabel::TextJustification::Center);
+  sidebar->addChild(lblSidebarTitle);
+  
+  SGI::FlatDividerPtr div = SGI::FlatDivider::create();
+  sidebar->addChild(div);
+
+  return sidebar;
+}
+
 int main(int argc, char* args[]) {
   if (!SDL_Init(SDL_INIT_VIDEO)) {
     ERROR(APP, "SDL_Init Error: %s", SDL_GetError());
@@ -51,32 +72,20 @@ int main(int argc, char* args[]) {
   win->addCursor(SGI::Window::CursorType::DEFAULT, "images/ui/cursor_pointerFlat.png");
 
   // win->setBackgroundTexture("metalPanel");
-  win->setSpacing(SGI::Container::ChildSpacing::Around);
-  win->setDirection(SGI::Container::ChildDirection::Column);
+  win->setSpaceContent(SGI::Container::SpaceContent::Around);
+  win->setDirection(SGI::Container::Direction::Column);
   win->setCursor(SGI::Window::CursorType::DEFAULT);
   win->setPadding(20, 20, 20, 20);
 
-  SGI::FlatPanelPtr sidebar = SGI::FlatPanel::create();
-  sidebar->setName("sidebar");
-  sidebar->setDirection(SGI::Container::ChildDirection::Column);
-  sidebar->setSpacing(SGI::Container::ChildSpacing::Between);
+  SGI::WidgetPtr sidebar = createSidebar();
   win->getSidebar()->addChild(sidebar);
-
-  SGI::FlatLabelPtr lblSidebarTitle = SGI::FlatLabel::create("Widgets");
-  lblSidebarTitle->setName("sidebarTitle");
-  lblSidebarTitle->setFontSize(36);
-  lblSidebarTitle->setJustification(SGI::FlatLabel::TextJustification::Center);
-  sidebar->addChild(lblSidebarTitle);
-  
-  SGI::FlatDividerPtr div = SGI::FlatDivider::create();
-  sidebar->addChild(div);
 
   SGI::FlatPanelPtr sectionA = SGI::FlatPanel::create();
   sectionA->setName("sectionA");
   sectionA->setConstraintFixed(SGI::Widget::ConstraintType::Width, 450);
   sectionA->setConstraintMaximum(SGI::Widget::ConstraintType::Height, 300);
-  sectionA->setDirection(SGI::Container::ChildDirection::Column);
-  sectionA->setSpacing(SGI::Container::ChildSpacing::Around);
+  sectionA->setDirection(SGI::Container::Direction::Column);
+  sectionA->setSpaceContent(SGI::Container::SpaceContent::Around);
   win->addChild(sectionA);
 
   SGI::FlatVideoPtr v1 = SGI::FlatVideo::create();
@@ -118,42 +127,44 @@ int main(int argc, char* args[]) {
   });
   sectionA->addChild(hs1);
 
+  SGI::Platform::createNotification("title", "message");
+
   // SGI::FlatPanelPtr sectionA1 = SGI::FlatPanel::create();
   // sectionA1->setName("sectionA");
   // sectionA1->setConstraintFixed(SGI::Widget::ConstraintType::Width, 400);
   // sectionA1->setConstraintFixed(SGI::Widget::ConstraintType::Height, 200);
-  // sectionA1->setSpacing(SGI::Container::ChildSpacing::Around);
+  // sectionA1->setSpaceContent(SGI::Container::SpaceContent::Around);
   // sectionA->addChild(sectionA1);
 
   SGI::FlatPanelPtr sectionA2 = SGI::FlatPanel::create();
   sectionA2->setName("sectionA");
   sectionA2->setConstraintFixed(SGI::Widget::ConstraintType::Height, 50);
-  sectionA2->setSpacing(SGI::Container::ChildSpacing::Around);
+  sectionA2->setSpaceContent(SGI::Container::SpaceContent::Around);
   sectionA2->setConstraint(SGI::Container::ConstraintType::Spacing, 20, 20);
   sectionA->addChild(sectionA2);
 
   SGI::FlatPanelPtr sectionB = SGI::FlatPanel::create();
   sectionB->setName("sectionB");
   sectionB->setConstraintMaximum(SGI::Widget::ConstraintType::Height, 300);
-  sectionB->setSpacing(SGI::Container::ChildSpacing::Around);
-  sectionB->setDirection(SGI::Container::ChildDirection::Column);
+  sectionB->setSpaceContent(SGI::Container::SpaceContent::Around);
+  sectionB->setDirection(SGI::Container::Direction::Column);
   win->addChild(sectionB);
 
   SGI::FlatPanelPtr sectionB1 = SGI::FlatPanel::create();
   sectionB1->setName("sectionB1");
   sectionB1->setConstraintMaximum(SGI::Widget::ConstraintType::Height, 70);
-  sectionB1->setSpacing(SGI::Container::ChildSpacing::Around);
+  sectionB1->setSpaceContent(SGI::Container::SpaceContent::Around);
   sectionB->addChild(sectionB1);
 
   SGI::FlatPanelPtr sectionB2 = SGI::FlatPanel::create();
   sectionB2->setName("sectionB2");
-  sectionB2->setSpacing(SGI::Container::ChildSpacing::Around);
+  sectionB2->setSpaceContent(SGI::Container::SpaceContent::Around);
   sectionB->addChild(sectionB2);
 
   SGI::FlatPanelPtr sectionB3 = SGI::FlatPanel::create();
   sectionB3->setName("sectionB3");
   sectionB3->setConstraintMaximum(SGI::Widget::ConstraintType::Height, 70);
-  sectionB3->setSpacing(SGI::Container::ChildSpacing::Around);
+  sectionB3->setSpaceContent(SGI::Container::SpaceContent::Around);
   sectionB->addChild(sectionB3);
 
   SGI::FlatButtonPtr b1 = SGI::FlatButton::create("Play WAV");
@@ -248,7 +259,7 @@ int main(int argc, char* args[]) {
   sectionB2->addChild(t1);
 
   SGI::OptionGroupPtr og = SGI::OptionGroup::create();
-  og->setSpacing(SGI::Container::ChildSpacing::Around);
+  og->setSpaceContent(SGI::Container::SpaceContent::Around);
   og->setMultiselect(true);
   og->addChangeListener([](SGI::WindowPtr window, std::vector<SGI::FlatOptionPtr> widgets)->bool {
     std::string selected = "";

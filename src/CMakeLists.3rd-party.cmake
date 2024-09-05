@@ -6,6 +6,27 @@ endif()
 include(FetchContent)
 include(ExternalProject)
 
+# Set up Doxygen
+# FetchContent_Declare(
+#   doxygen
+#   URL     https://github.com/doxygen/doxygen/archive/Release_1_9_6.zip
+#   URL_HASH SHA256=1f3e3a6476147e1567008e377973b1c8474ff05d14200a1ffbdfca2231238d8a
+# )
+# FetchContent_MakeAvailable(doxygen)
+
+# set(DOXYGEN_OUTPUT_DIR ${CMAKE_BINARY_DIR}/docs)
+# set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+# set(DOXYGEN_OUT ${CMAKE_BINARY_DIR}/Doxyfile)
+# configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+# add_custom_target(doc ALL
+#   COMMAND ${CMAKE_COMMAND} -E make_directory ${DOXYGEN_OUTPUT_DIR}
+#   COMMAND ${CMAKE_COMMAND} -E chdir ${DOXYGEN_OUTPUT_DIR} ${CMAKE_BINARY_DIR}/_deps/doxygen-src/build/bin/doxygen ${DOXYGEN_OUT}
+#   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+#   COMMENT "Generating API documentation with Doxygen"
+#   VERBATIM
+# )
+# add_dependencies(${APP_NAME} doc)
+
 # Fetch FreeType
 if(NOT ENABLE_EXTERNAL_STATIC)
   find_package(Freetype)
