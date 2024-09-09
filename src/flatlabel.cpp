@@ -83,7 +83,7 @@ namespace SGI {
   void FlatLabel::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _textColor = theme.primary.textColor;
+    _textColor = theme.colors.textColor;
     _updateLabel();
   }
   

@@ -6,147 +6,208 @@
 namespace SGI {
   Flat::Flat()
   {
-    _themes["Light"] = Theme{
-      "Light",
-      ButtonStyles{
-        { _hexToSDLColor("#0055FF"), _hexToSDLColor("#0044CC"), _hexToSDLColor("#003399"), _hexToSDLColor("#0044CC") }, // Primary
-        { _hexToSDLColor("#CCCCCC"), _hexToSDLColor("#BBBBBB"), _hexToSDLColor("#AAAAAA"), _hexToSDLColor("#BBBBBB") }, // Secondary
-        { _hexToSDLColor("#FFCC00"), _hexToSDLColor("#D4A100"), _hexToSDLColor("#B88600"), _hexToSDLColor("#D4A100") }, // Tertiary
-        { _hexToSDLColor("#00CC99"), _hexToSDLColor("#009966"), _hexToSDLColor("#007744"), _hexToSDLColor("#009966") }, // Success
-        { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#CC0000") }  // Danger
-      },
-      Colors{
-        _hexToSDLColor("#3399FF"), _hexToSDLColor("#2E89E6"), _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#D1D1D1"),
-        _hexToSDLColor("#E0E0E0"), _hexToSDLColor("#0044CC"), _hexToSDLColor("#000000"), _hexToSDLColor("#004EAA") // Text Select Color adjusted
-      },
-      Colors{
-        _hexToSDLColor("#CCCCCC"), _hexToSDLColor("#B8B8B8"), _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#D4D4D4"),
-        _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#BBBBBB"), _hexToSDLColor("#666666"), _hexToSDLColor("#CCCCCC")
-      },
-      Colors{
-        _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#D1D1D1"), _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#D1D1D1"),
-        _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#0044CC"), _hexToSDLColor("#000000"), _hexToSDLColor("#004EAA")
-      }
-    };
+    // _themes["Light"] = Theme{
+    //   "Light",
+    //   ButtonStyles{
+    //     { _hexToSDLColor("#0055FF"), _hexToSDLColor("#0044CC"), _hexToSDLColor("#003399"), _hexToSDLColor("#0044CC") }, // Primary
+    //     { _hexToSDLColor("#CCCCCC"), _hexToSDLColor("#BBBBBB"), _hexToSDLColor("#AAAAAA"), _hexToSDLColor("#BBBBBB") }, // Secondary
+    //     { _hexToSDLColor("#FFCC00"), _hexToSDLColor("#D4A100"), _hexToSDLColor("#B88600"), _hexToSDLColor("#D4A100") }, // Tertiary
+    //     { _hexToSDLColor("#00CC99"), _hexToSDLColor("#009966"), _hexToSDLColor("#007744"), _hexToSDLColor("#009966") }, // Success
+    //     { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#CC0000") }  // Danger
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#3399FF"), _hexToSDLColor("#2E89E6"), _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#D1D1D1"),
+    //     _hexToSDLColor("#E0E0E0"), _hexToSDLColor("#0044CC"), _hexToSDLColor("#000000"), _hexToSDLColor("#004EAA") // Text Select Color adjusted
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#CCCCCC"), _hexToSDLColor("#B8B8B8"), _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#D4D4D4"),
+    //     _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#BBBBBB"), _hexToSDLColor("#666666"), _hexToSDLColor("#CCCCCC")
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#D1D1D1"), _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#D1D1D1"),
+    //     _hexToSDLColor("#F0F0F0"), _hexToSDLColor("#0044CC"), _hexToSDLColor("#000000"), _hexToSDLColor("#004EAA")
+    //   }
+    // };
 
 
-    _themes["Dark"] = Theme{
+    // _themes["Dark"] = Theme{
+    //   "Dark",
+    //   ButtonStyles{
+    //     { _hexToSDLColor("#007ACC"), _hexToSDLColor("#006BB3"), _hexToSDLColor("#005A99"), _hexToSDLColor("#006BB3") }, // Primary
+    //     { _hexToSDLColor("#3C3C3C"), _hexToSDLColor("#4A4A4A"), _hexToSDLColor("#5A5A5A"), _hexToSDLColor("#4A4A4A") }, // Secondary
+    //     { _hexToSDLColor("#FFCC00"), _hexToSDLColor("#D4A100"), _hexToSDLColor("#B88600"), _hexToSDLColor("#D4A100") }, // Tertiary
+    //     { _hexToSDLColor("#00CC99"), _hexToSDLColor("#009966"), _hexToSDLColor("#007744"), _hexToSDLColor("#009966") }, // Success
+    //     { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#CC0000") }  // Danger
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#E6E6E6"), _hexToSDLColor("#CCCCCC"), _hexToSDLColor("#1E1E1E"), _hexToSDLColor("#2D2D2D"),
+    //     _hexToSDLColor("#252526"), _hexToSDLColor("#006BB3"), _hexToSDLColor("#D4D4D4"), _hexToSDLColor("#6D7991") // Text Select Color adjusted
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#3C3C3C"), _hexToSDLColor("#363636"), _hexToSDLColor("#2D2D2D"), _hexToSDLColor("#4A4A4A"),
+    //     _hexToSDLColor("#2D2D2D"), _hexToSDLColor("#4A4A4A"), _hexToSDLColor("#A6A6A6"), _hexToSDLColor("#6D7991")
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#2D2D2D"), _hexToSDLColor("#2A2A2A"), _hexToSDLColor("#1E1E1E"), _hexToSDLColor("#2D2D2D"),
+    //     _hexToSDLColor("#252526"), _hexToSDLColor("#006BB3"), _hexToSDLColor("#D4D4D4"), _hexToSDLColor("#6D7991")
+    //   }
+    // };
+
+
+    // _themes["Alien Green"] = Theme{
+    //   "Alien Green",
+    //   ButtonStyles{
+    //     { _hexToSDLColor("#00FF00"), _hexToSDLColor("#00CC00"), _hexToSDLColor("#009900"), _hexToSDLColor("#00CC00") }, // Primary
+    //     { _hexToSDLColor("#006600"), _hexToSDLColor("#004C00"), _hexToSDLColor("#003300"), _hexToSDLColor("#004C00") }, // Secondary
+    //     { _hexToSDLColor("#FFCC00"), _hexToSDLColor("#D4A100"), _hexToSDLColor("#B88600"), _hexToSDLColor("#D4A100") }, // Tertiary
+    //     { _hexToSDLColor("#66FF66"), _hexToSDLColor("#4DB84D"), _hexToSDLColor("#33CC33"), _hexToSDLColor("#4DB84D") }, // Success
+    //     { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#CC0000") }  // Danger
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#00FF00"), _hexToSDLColor("#00E600"), _hexToSDLColor("#001A00"), _hexToSDLColor("#002200"),
+    //     _hexToSDLColor("#003300"), _hexToSDLColor("#00CC00"), _hexToSDLColor("#A6FFA6"), _hexToSDLColor("#00734E") // Text Select Color adjusted
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#00FF00"), _hexToSDLColor("#00E600"), _hexToSDLColor("#002200"), _hexToSDLColor("#004400"),
+    //     _hexToSDLColor("#004400"), _hexToSDLColor("#4DB84D"), _hexToSDLColor("#66CC66"), _hexToSDLColor("#00734E")
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#00FF00"), _hexToSDLColor("#00E600"), _hexToSDLColor("#001A00"), _hexToSDLColor("#002200"),
+    //     _hexToSDLColor("#003300"), _hexToSDLColor("#00CC00"), _hexToSDLColor("#A6FFA6"), _hexToSDLColor("#00734E")
+    //   }
+    // };
+
+
+    // _themes["Techie Blue"] = Theme{
+    //   "Techie Blue",
+    //   ButtonStyles{
+    //     { _hexToSDLColor("#00BFFF"), _hexToSDLColor("#0099CC"), _hexToSDLColor("#006699"), _hexToSDLColor("#0099CC") }, // Primary
+    //     { _hexToSDLColor("#004080"), _hexToSDLColor("#003366"), _hexToSDLColor("#00264D"), _hexToSDLColor("#003366") }, // Secondary
+    //     { _hexToSDLColor("#FFA500"), _hexToSDLColor("#D48800"), _hexToSDLColor("#CC7000"), _hexToSDLColor("#D48800") }, // Tertiary
+    //     { _hexToSDLColor("#66CFFF"), _hexToSDLColor("#4DB8E6"), _hexToSDLColor("#3399CC"), _hexToSDLColor("#4DB8E6") }, // Success
+    //     { _hexToSDLColor("#FF4D4D"), _hexToSDLColor("#FF1A1A"), _hexToSDLColor("#B30000"), _hexToSDLColor("#FF1A1A") }  // Danger
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#00BFFF"), _hexToSDLColor("#00ACED"), _hexToSDLColor("#001F33"), _hexToSDLColor("#00264D"),
+    //     _hexToSDLColor("#003366"), _hexToSDLColor("#0099CC"), _hexToSDLColor("#80D4FF"), _hexToSDLColor("#005480") // Text Select Color adjusted
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#00BFFF"), _hexToSDLColor("#00ACED"), _hexToSDLColor("#00264D"), _hexToSDLColor("#004080"),
+    //     _hexToSDLColor("#004080"), _hexToSDLColor("#4DB8E6"), _hexToSDLColor("#80CFFF"), _hexToSDLColor("#005480")
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#00BFFF"), _hexToSDLColor("#00ACED"), _hexToSDLColor("#001F33"), _hexToSDLColor("#00264D"),
+    //     _hexToSDLColor("#003366"), _hexToSDLColor("#0099CC"), _hexToSDLColor("#80D4FF"), _hexToSDLColor("#005480")
+    //   }
+    // };
+
+
+    // _themes["Devil Red"] = Theme{
+    //   "Devilish Red",
+    //   ButtonStyles{
+    //     { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#CC0000") }, // Primary
+    //     { _hexToSDLColor("#660000"), _hexToSDLColor("#4D0000"), _hexToSDLColor("#330000"), _hexToSDLColor("#4D0000") }, // Secondary
+    //     { _hexToSDLColor("#FFA500"), _hexToSDLColor("#CC8400"), _hexToSDLColor("#996300"), _hexToSDLColor("#CC8400") }, // Tertiary
+    //     { _hexToSDLColor("#FF6666"), _hexToSDLColor("#E64D4D"), _hexToSDLColor("#CC3333"), _hexToSDLColor("#E64D4D") }, // Success
+    //     { _hexToSDLColor("#000000"), _hexToSDLColor("#262626"), _hexToSDLColor("#333333"), _hexToSDLColor("#262626") }  // Danger
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC2900"), _hexToSDLColor("#330000"), _hexToSDLColor("#590000"),
+    //     _hexToSDLColor("#4D0000"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#FF9999"), _hexToSDLColor("#800000") // Text Select Color adjusted
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC2900"), _hexToSDLColor("#590000"), _hexToSDLColor("#800000"),
+    //     _hexToSDLColor("#660000"), _hexToSDLColor("#E64D4D"), _hexToSDLColor("#FF6666"), _hexToSDLColor("#800000")
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC2900"), _hexToSDLColor("#330000"), _hexToSDLColor("#590000"),
+    //     _hexToSDLColor("#4D0000"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#FF9999"), _hexToSDLColor("#800000")
+    //   }
+    // };
+
+    // _themes["Pastel"] = Theme{
+    //   "Pastel",
+    //   ButtonStyles{
+    //     { _hexToSDLColor("#FFB3B3"), _hexToSDLColor("#FF9999"), _hexToSDLColor("#FF6666"), _hexToSDLColor("#FF9999") }, // Primary
+    //     { _hexToSDLColor("#FFFF99"), _hexToSDLColor("#FFFF66"), _hexToSDLColor("#FFFF33"), _hexToSDLColor("#FFFF66") }, // Secondary
+    //     { _hexToSDLColor("#FFCCFF"), _hexToSDLColor("#FF99FF"), _hexToSDLColor("#FF66FF"), _hexToSDLColor("#FF99FF") }, // Tertiary
+    //     { _hexToSDLColor("#99FF99"), _hexToSDLColor("#66FF66"), _hexToSDLColor("#33FF33"), _hexToSDLColor("#66FF66") }, // Success
+    //     { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#CC0000") }  // Danger
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#FFB3B3"), _hexToSDLColor("#E680B2"), _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#FFD9D9"),
+    //     _hexToSDLColor("#FFE6E6"), _hexToSDLColor("#FF9999"), _hexToSDLColor("#FF3333"), _hexToSDLColor("#FF9999") // Text Select Color adjusted
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#FFB3B3"), _hexToSDLColor("#80E6B2"), _hexToSDLColor("#FFFFE6"), _hexToSDLColor("#FFFF99"),
+    //     _hexToSDLColor("#FFFFE6"), _hexToSDLColor("#FFFF66"), _hexToSDLColor("#FF6666"), _hexToSDLColor("#FFFF99")
+    //   },
+    //   Colors{
+    //     _hexToSDLColor("#FFE6E6"), _hexToSDLColor("#B2E680"), _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#FFE6FF"),
+    //     _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#FFB3FF"), _hexToSDLColor("#FF3333"), _hexToSDLColor("#FF9999")
+    //   }
+    // };
+
+    SDL_Color darkText = {255, 255, 255, 255};          // White text
+    SDL_Color darkFill = {50, 50, 50, 255};             // Dark gray fill
+    SDL_Color darkBorder = {70, 70, 70, 255};           // Dark gray border
+    SDL_Color darkBackground = {30, 30, 30, 255};       // Darkest color for background
+    SDL_Color darkAccentFill = {100, 100, 100, 255};    // Accent fill
+    SDL_Color darkAccentBorder = {150, 150, 150, 255};  // Accent border
+    SDL_Color darkFocusedBorder = {120, 120, 120, 255}; // Slightly lighter focused border
+    SDL_Color disabledText = {180, 180, 180, 255};      // Light gray text for disabled state
+    SDL_Color disabledFill = {60, 60, 60, 255};         // Lighter gray for disabled fill
+    SDL_Color disabledBorder = {90, 90, 90, 255};       // Lighter gray for disabled border
+
+    Theme darkTheme = {
       "Dark",
-      ButtonStyles{
-        { _hexToSDLColor("#007ACC"), _hexToSDLColor("#006BB3"), _hexToSDLColor("#005A99"), _hexToSDLColor("#006BB3") }, // Primary
-        { _hexToSDLColor("#3C3C3C"), _hexToSDLColor("#4A4A4A"), _hexToSDLColor("#5A5A5A"), _hexToSDLColor("#4A4A4A") }, // Secondary
-        { _hexToSDLColor("#FFCC00"), _hexToSDLColor("#D4A100"), _hexToSDLColor("#B88600"), _hexToSDLColor("#D4A100") }, // Tertiary
-        { _hexToSDLColor("#00CC99"), _hexToSDLColor("#009966"), _hexToSDLColor("#007744"), _hexToSDLColor("#009966") }, // Success
-        { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#CC0000") }  // Danger
+      {
+        {
+          {darkText, darkFill, darkBorder},
+          {darkText, {70, 70, 70, 255}, darkBorder},
+          {darkText, {100, 100, 100, 255}, darkBorder},
+          {disabledText, disabledFill, disabledBorder}
+        },
+        {
+          {darkText, darkFill, darkBorder},
+          {darkText, {70, 70, 70, 255}, darkBorder},
+          {darkText, {100, 100, 100, 255}, darkBorder},
+          {disabledText, disabledFill, disabledBorder}
+        },
+        {
+          {darkText, {255, 140, 0, 255}, darkBorder},
+          {darkText, {255, 165, 0, 255}, darkBorder},
+          {darkText, {255, 180, 0, 255}, darkBorder},
+          {disabledText, disabledFill, disabledBorder}
+        },
+        {
+          {darkText, {0, 120, 200, 255}, darkBorder},
+          {darkText, {0, 140, 230, 255}, darkBorder},
+          {darkText, {0, 160, 250, 255}, darkBorder},
+          {disabledText, disabledFill, disabledBorder}
+        },
+        {
+          {darkText, {200, 0, 0, 255}, darkBorder},
+          {darkText, {220, 0, 0, 255}, darkBorder},
+          {darkText, {240, 0, 0, 255}, darkBorder},
+          {disabledText, disabledFill, disabledBorder}
+        }
       },
-      Colors{
-        _hexToSDLColor("#E6E6E6"), _hexToSDLColor("#CCCCCC"), _hexToSDLColor("#1E1E1E"), _hexToSDLColor("#2D2D2D"),
-        _hexToSDLColor("#252526"), _hexToSDLColor("#006BB3"), _hexToSDLColor("#D4D4D4"), _hexToSDLColor("#6D7991") // Text Select Color adjusted
-      },
-      Colors{
-        _hexToSDLColor("#3C3C3C"), _hexToSDLColor("#363636"), _hexToSDLColor("#2D2D2D"), _hexToSDLColor("#4A4A4A"),
-        _hexToSDLColor("#2D2D2D"), _hexToSDLColor("#4A4A4A"), _hexToSDLColor("#A6A6A6"), _hexToSDLColor("#6D7991")
-      },
-      Colors{
-        _hexToSDLColor("#2D2D2D"), _hexToSDLColor("#2A2A2A"), _hexToSDLColor("#1E1E1E"), _hexToSDLColor("#2D2D2D"),
-        _hexToSDLColor("#252526"), _hexToSDLColor("#006BB3"), _hexToSDLColor("#D4D4D4"), _hexToSDLColor("#6D7991")
+      {
+        // Colors
+        darkAccentBorder,
+        darkAccentFill,
+        darkBackground,
+        darkBorder,
+        darkFill,
+        darkFocusedBorder,
+        darkText,
+        {255, 255, 255, 255} // Text select color (white highlight)
       }
     };
 
-
-    _themes["Alien Green"] = Theme{
-      "Alien Green",
-      ButtonStyles{
-        { _hexToSDLColor("#00FF00"), _hexToSDLColor("#00CC00"), _hexToSDLColor("#009900"), _hexToSDLColor("#00CC00") }, // Primary
-        { _hexToSDLColor("#006600"), _hexToSDLColor("#004C00"), _hexToSDLColor("#003300"), _hexToSDLColor("#004C00") }, // Secondary
-        { _hexToSDLColor("#FFCC00"), _hexToSDLColor("#D4A100"), _hexToSDLColor("#B88600"), _hexToSDLColor("#D4A100") }, // Tertiary
-        { _hexToSDLColor("#66FF66"), _hexToSDLColor("#4DB84D"), _hexToSDLColor("#33CC33"), _hexToSDLColor("#4DB84D") }, // Success
-        { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#CC0000") }  // Danger
-      },
-      Colors{
-        _hexToSDLColor("#00FF00"), _hexToSDLColor("#00E600"), _hexToSDLColor("#001A00"), _hexToSDLColor("#002200"),
-        _hexToSDLColor("#003300"), _hexToSDLColor("#00CC00"), _hexToSDLColor("#A6FFA6"), _hexToSDLColor("#00734E") // Text Select Color adjusted
-      },
-      Colors{
-        _hexToSDLColor("#00FF00"), _hexToSDLColor("#00E600"), _hexToSDLColor("#002200"), _hexToSDLColor("#004400"),
-        _hexToSDLColor("#004400"), _hexToSDLColor("#4DB84D"), _hexToSDLColor("#66CC66"), _hexToSDLColor("#00734E")
-      },
-      Colors{
-        _hexToSDLColor("#00FF00"), _hexToSDLColor("#00E600"), _hexToSDLColor("#001A00"), _hexToSDLColor("#002200"),
-        _hexToSDLColor("#003300"), _hexToSDLColor("#00CC00"), _hexToSDLColor("#A6FFA6"), _hexToSDLColor("#00734E")
-      }
-    };
-
-
-    _themes["Techie Blue"] = Theme{
-      "Techie Blue",
-      ButtonStyles{
-        { _hexToSDLColor("#00BFFF"), _hexToSDLColor("#0099CC"), _hexToSDLColor("#006699"), _hexToSDLColor("#0099CC") }, // Primary
-        { _hexToSDLColor("#004080"), _hexToSDLColor("#003366"), _hexToSDLColor("#00264D"), _hexToSDLColor("#003366") }, // Secondary
-        { _hexToSDLColor("#FFA500"), _hexToSDLColor("#D48800"), _hexToSDLColor("#CC7000"), _hexToSDLColor("#D48800") }, // Tertiary
-        { _hexToSDLColor("#66CFFF"), _hexToSDLColor("#4DB8E6"), _hexToSDLColor("#3399CC"), _hexToSDLColor("#4DB8E6") }, // Success
-        { _hexToSDLColor("#FF4D4D"), _hexToSDLColor("#FF1A1A"), _hexToSDLColor("#B30000"), _hexToSDLColor("#FF1A1A") }  // Danger
-      },
-      Colors{
-        _hexToSDLColor("#00BFFF"), _hexToSDLColor("#00ACED"), _hexToSDLColor("#001F33"), _hexToSDLColor("#00264D"),
-        _hexToSDLColor("#003366"), _hexToSDLColor("#0099CC"), _hexToSDLColor("#80D4FF"), _hexToSDLColor("#005480") // Text Select Color adjusted
-      },
-      Colors{
-        _hexToSDLColor("#00BFFF"), _hexToSDLColor("#00ACED"), _hexToSDLColor("#00264D"), _hexToSDLColor("#004080"),
-        _hexToSDLColor("#004080"), _hexToSDLColor("#4DB8E6"), _hexToSDLColor("#80CFFF"), _hexToSDLColor("#005480")
-      },
-      Colors{
-        _hexToSDLColor("#00BFFF"), _hexToSDLColor("#00ACED"), _hexToSDLColor("#001F33"), _hexToSDLColor("#00264D"),
-        _hexToSDLColor("#003366"), _hexToSDLColor("#0099CC"), _hexToSDLColor("#80D4FF"), _hexToSDLColor("#005480")
-      }
-    };
-
-
-    _themes["Devil Red"] = Theme{
-      "Devilish Red",
-      ButtonStyles{
-        { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#CC0000") }, // Primary
-        { _hexToSDLColor("#660000"), _hexToSDLColor("#4D0000"), _hexToSDLColor("#330000"), _hexToSDLColor("#4D0000") }, // Secondary
-        { _hexToSDLColor("#FFA500"), _hexToSDLColor("#CC8400"), _hexToSDLColor("#996300"), _hexToSDLColor("#CC8400") }, // Tertiary
-        { _hexToSDLColor("#FF6666"), _hexToSDLColor("#E64D4D"), _hexToSDLColor("#CC3333"), _hexToSDLColor("#E64D4D") }, // Success
-        { _hexToSDLColor("#000000"), _hexToSDLColor("#262626"), _hexToSDLColor("#333333"), _hexToSDLColor("#262626") }  // Danger
-      },
-      Colors{
-        _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC2900"), _hexToSDLColor("#330000"), _hexToSDLColor("#590000"),
-        _hexToSDLColor("#4D0000"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#FF9999"), _hexToSDLColor("#800000") // Text Select Color adjusted
-      },
-      Colors{
-        _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC2900"), _hexToSDLColor("#590000"), _hexToSDLColor("#800000"),
-        _hexToSDLColor("#660000"), _hexToSDLColor("#E64D4D"), _hexToSDLColor("#FF6666"), _hexToSDLColor("#800000")
-      },
-      Colors{
-        _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC2900"), _hexToSDLColor("#330000"), _hexToSDLColor("#590000"),
-        _hexToSDLColor("#4D0000"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#FF9999"), _hexToSDLColor("#800000")
-      }
-    };
-
-    _themes["Pastel"] = Theme{
-      "Pastel",
-      ButtonStyles{
-        { _hexToSDLColor("#FFB3B3"), _hexToSDLColor("#FF9999"), _hexToSDLColor("#FF6666"), _hexToSDLColor("#FF9999") }, // Primary
-        { _hexToSDLColor("#FFFF99"), _hexToSDLColor("#FFFF66"), _hexToSDLColor("#FFFF33"), _hexToSDLColor("#FFFF66") }, // Secondary
-        { _hexToSDLColor("#FFCCFF"), _hexToSDLColor("#FF99FF"), _hexToSDLColor("#FF66FF"), _hexToSDLColor("#FF99FF") }, // Tertiary
-        { _hexToSDLColor("#99FF99"), _hexToSDLColor("#66FF66"), _hexToSDLColor("#33FF33"), _hexToSDLColor("#66FF66") }, // Success
-        { _hexToSDLColor("#FF3333"), _hexToSDLColor("#CC0000"), _hexToSDLColor("#990000"), _hexToSDLColor("#CC0000") }  // Danger
-      },
-      Colors{
-        _hexToSDLColor("#FFB3B3"), _hexToSDLColor("#E680B2"), _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#FFD9D9"),
-        _hexToSDLColor("#FFE6E6"), _hexToSDLColor("#FF9999"), _hexToSDLColor("#FF3333"), _hexToSDLColor("#FF9999") // Text Select Color adjusted
-      },
-      Colors{
-        _hexToSDLColor("#FFB3B3"), _hexToSDLColor("#80E6B2"), _hexToSDLColor("#FFFFE6"), _hexToSDLColor("#FFFF99"),
-        _hexToSDLColor("#FFFFE6"), _hexToSDLColor("#FFFF66"), _hexToSDLColor("#FF6666"), _hexToSDLColor("#FFFF99")
-      },
-      Colors{
-        _hexToSDLColor("#FFE6E6"), _hexToSDLColor("#B2E680"), _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#FFE6FF"),
-        _hexToSDLColor("#FFFFFF"), _hexToSDLColor("#FFB3FF"), _hexToSDLColor("#FF3333"), _hexToSDLColor("#FF9999")
-      }
-    };
+    // Add to themes
+    _themes["Dark"] = darkTheme;
   }
 
   const Flat::Theme& Flat::_getTheme(const std::string& themeName) const

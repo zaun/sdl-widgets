@@ -22,14 +22,17 @@ namespace SGI {
 
     bool processEvent(const SDL_Event *event) override;
 
+    bool loadFile(std::string filename);
+
     void setFontName(const std::string& fontName);
     void setFontSize(double fontSize);
+    void setResourcePath(std::string path);
     void setValue(const std::string& value);
 
     void setTheme(std::string name) override;
   
   protected:
-    FlatText() { };
+    FlatText();
 
   private:
     struct Token {
@@ -52,6 +55,9 @@ namespace SGI {
       int width;
       int height;
     };
+
+    std::string _resourcePath;
+
     std::vector<std::vector<DisplayTextures>> _lineTextures;
     int _totalHeight = 0;
     int _totalOffset = 0;

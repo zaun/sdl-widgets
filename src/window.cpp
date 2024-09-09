@@ -55,20 +55,23 @@ namespace SGI {
 
     _renderer = renderer;
 
-    _bounds.x = 0;
-    _bounds.y = 0;
-    _bounds.w = width;
-    _bounds.h = height;
+    SDL_Rect bounds;
+    bounds.x = 0;
+    bounds.y = 0;
+    bounds.w = width;
+    bounds.h = height;
+    Widget::_setBounds(bounds);
 
-    _sidebarContainer = Container::create();
-    _sidebarContainer->setName("WindowSidebarContainer");
     _sidebarBounds.h = _bounds.h;
     _sidebarBounds.w = _bounds.w / 4;
     _sidebarBounds.x = -_sidebarBounds.w;
     _sidebarBounds.y = 0;
-    _sidebarContainer->_setBounds(_sidebarBounds);
+
+    _sidebarContainer = Container::create();
+    _sidebarContainer->setName("WindowSidebarContainer");
     _sidebarContainer->setPadding(0, 0, 0, 0);
-    _sidebarContainer->_renderer = _renderer;
+    _sidebarContainer->_setBounds(_sidebarBounds);
+    _sidebarContainer->_setRenderer(_renderer);
 
     _resourcePath = SDL_GetBasePath();
   };
@@ -108,7 +111,6 @@ namespace SGI {
     }
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(getRenderer().get(), surface);
-    SDL_DestroySurface(surface);
 
     if (!texture) {
       LOG(TEXTURE, "Unable to create texture from %s: %s", fullPath.c_str(), SDL_GetError());
@@ -122,9 +124,12 @@ namespace SGI {
           SDL_DestroyTexture(p);
         }
       }),
+      surface->w,
+      surface->h,
       sliceInfo.x1 == 0 && sliceInfo.x2 == 0 && sliceInfo.y1 == 0 && sliceInfo.y1 == 0 ? false : true,
       sliceInfo
     });
+    SDL_DestroySurface(surface);
 
     _textureCache[textureName] = textureData;
     LOG(TEXTURE, "Texture %s added", textureName.c_str());
@@ -196,8 +201,11 @@ namespace SGI {
       return false;
     }
 
-    if (_sidebarState == SidebarState::CLOSED || !isMouseOverSidebar()) {
+    if (_sidebarState == SidebarState::CLOSED) {
       return Container::processEvent(event);
+    } else if (!isMouseOverSidebar() && event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+      closeSidebar();
+      return true;
     } else {
       return _sidebarContainer->processEvent(event);
     }

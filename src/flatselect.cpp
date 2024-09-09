@@ -184,9 +184,9 @@ namespace SGI {
   void FlatSelect::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _textColor = theme.primary.textColor;
-    _borderColor = theme.primary.borderColor;
-    _fillColor = theme.primary.fillColor;
+    _textColor = theme.colors.textColor;
+    _borderColor = theme.colors.borderColor;
+    _fillColor = theme.colors.fillColor;
     _updateLabel();
     _updateOptionsLadel();
   }

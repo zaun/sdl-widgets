@@ -13,20 +13,31 @@ namespace SGI {
     static std::shared_ptr<FlatButton> create();
     static std::shared_ptr<FlatButton> create(std::string label);
 
+    enum Style {
+      Primary,
+      Secondary,
+      Warning,
+      Info,
+      Danger,
+    };
+
     ~FlatButton();
 
     std::string getFontName();
     double getFontSize();
     std::string getLabel();
 
+    bool processEvent(const SDL_Event *event) override;
+
     void setBorderColor(const SDL_Color &color, const SDL_Color &colorHover, const SDL_Color &colorPressed);
-    void setFillColor(const SDL_Color &color, const SDL_Color &colorHover, const SDL_Color &colorPressed);
-    void setFontColor(const SDL_Color &color, const SDL_Color &colorHover, const SDL_Color &colorPressed);
+    void setDisabled(bool value);
     void setFontName(const std::string& fontName);
     void setFontSize(double fontSize);
+    void setIcon(const std::string& value);
     void setLabel(const std::string& value);
     void setOutline(bool value);
     void setRadius(int value);
+    void setStyle(const Style value);
 
     void setTheme(std::string name) override;
 
@@ -35,6 +46,9 @@ namespace SGI {
 
   private:
     bool _outline = false;
+    Flat::Theme _theme;
+    Style _style = Style::Primary;
+    bool _disabled = false;
 
     SDL_Color _textColor = {255, 255, 255, 255};
     SDL_Color _textColorHover = {255, 255, 255, 255};
@@ -49,8 +63,10 @@ namespace SGI {
     std::string _fontName = "default";
     double _fontSize = 16;
 
-    std::string _label = "";
+    std::string _icon = "";
+    float _iconSize = 0;
 
+    std::string _label = "";
     SDL_Texture* _textTexture = nullptr;
     SDL_Texture* _textTextureHover = nullptr;
     SDL_Texture* _textTexturePressed = nullptr;

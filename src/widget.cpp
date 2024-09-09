@@ -281,6 +281,12 @@ namespace SGI {
     _contentArea.y = _bounds.y + _padding.top;
     _contentArea.w = _bounds.w - _padding.left - _padding.right;
     _contentArea.h = _bounds.h - _padding.top - _padding.bottom;
+    if (_contentArea.w < 0) {
+      _contentArea.w = 0;
+    }
+    if (_contentArea.h < 0) {
+      _contentArea.h = 0;
+    }
   }
 
 }

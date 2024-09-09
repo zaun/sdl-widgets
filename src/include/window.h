@@ -51,6 +51,8 @@ namespace SGI {
 
     struct TextureData {
       std::shared_ptr<SDL_Texture> texture;
+      int width;
+      int height;
       bool sliced;
       TextureSlice sliceInfo;
     };
@@ -120,6 +122,7 @@ namespace SGI {
     std::map<CursorType, std::shared_ptr<SDL_Cursor>> _cursorCache;
   };
   using WindowPtr = std::shared_ptr<SGI::Window>;
+  using TextureDataPtr = std::shared_ptr<SGI::Window::TextureData>;
 }
 
 #endif // SGI_WINDOW_H

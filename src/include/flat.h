@@ -17,11 +17,17 @@ namespace SGI {
   protected:
     Flat();
 
+    struct ButtonColors {
+      SDL_Color text;
+      SDL_Color fill;
+      SDL_Color border;
+    };
+
     struct ButtonStateColors {
-      SDL_Color defaultColor;
-      SDL_Color hoverColor;
-      SDL_Color pressedColor;
-      SDL_Color disabledColor;
+      ButtonColors defaultColor;
+      ButtonColors hoverColor;
+      ButtonColors pressedColor;
+      ButtonColors disabledColor;
     };
 
     struct ButtonStyles {
@@ -46,9 +52,7 @@ namespace SGI {
     struct Theme {
       std::string name;
       ButtonStyles buttons;
-      Colors primary;
-      Colors secondary;
-      Colors terchary;
+      Colors colors;
     };
     
     std::unordered_map<std::string, Theme> _themes;

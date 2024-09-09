@@ -107,6 +107,12 @@ namespace SGI {
     }
   }
 
+  void Container::removeAll()
+  {
+    _children.clear();
+    _calculateChildrenBounds();
+  }
+
   void Container::setConstraint(Widget::ConstraintType constraint, int minValue, int maxValue)
   {
     Widget::setConstraint(constraint, minValue, maxValue);
@@ -117,10 +123,10 @@ namespace SGI {
   {
     switch(constraint) {
       case Container::ConstraintType::Height:
-        Widget::setConstraint(Widget::ConstraintType::Width, minValue, maxValue); 
+        Widget::setConstraint(Widget::ConstraintType::Height, minValue, maxValue); 
         break;
       case Container::ConstraintType::Width:
-        Widget::setConstraint(Widget::ConstraintType::Height, minValue, maxValue); 
+        Widget::setConstraint(Widget::ConstraintType::Width, minValue, maxValue); 
         break;
       case Container::ConstraintType::Spacing:
         _spaceingConstraint.minValue = minValue;
@@ -221,20 +227,13 @@ namespace SGI {
   {
     _updateContentArea();
 
-    unsigned int numChildren = _children.size();
+    int numChildren = _children.size();
     if (numChildren == 0) {
       return;
     }
 
-    unsigned int parentWidth = _contentArea.w;
-    if (parentWidth < 0) {
-      parentWidth = 0;
-    }
-
-    unsigned int parentHeight = _contentArea.h;
-    if (parentHeight < 0) {
-      parentHeight = 0;
-    }
+    int parentWidth = _contentArea.w;
+    int parentHeight = _contentArea.h;
 
     _spacing = _spaceingConstraint.minValue;
 
@@ -277,18 +276,6 @@ namespace SGI {
         heightZero += 1;
       }
     }
-
-    // Reset all children to minimum bounds and margins
-    int avgWidth = (widthLeft - minSpaceing) / widthZero;
-    int avgHeight = (heightLeft - minSpaceing) / heightZero;
-    for (size_t i = 0; i < numChildren; ++i) {
-      if (_children[i]->_bounds.w == 0) {
-        _children[i]->_bounds.w = avgWidth < _children[i]->_constraints.width.maxValue ? avgWidth : _children[i]->_constraints.width.maxValue;
-      }
-      if (_children[i]->_bounds.h == 0) {
-        _children[i]->_bounds.h = avgHeight < _children[i]->_constraints.height.maxValue ? avgHeight : _children[i]->_constraints.height.maxValue;
-      }
-    }
     
     if (_Direction == Row) {
       _calculateChildrenBoundsRow();
@@ -301,15 +288,10 @@ namespace SGI {
 
   int Container::_calculateChildrenBoundsRow()
   {
-    unsigned int parentWidth = _contentArea.w;
-    if (parentWidth < 0) {
-      parentWidth = 0;
-    }
-    unsigned int parentHeight = _contentArea.h;
-    if (parentHeight < 0) {
-      parentHeight = 0;
-    }
-    unsigned int numChildren = _children.size();
+    SDL_Rect ca = getContentArea();
+    int parentWidth = ca.w;
+    int parentHeight = ca.h;
+    int numChildren = _children.size();
 
     if (numChildren == 0) {
       return 0;
@@ -318,7 +300,7 @@ namespace SGI {
     _spacing = _spaceingConstraint.minValue;
 
     // Children are expected to be reset already
-    unsigned int contentWidth = 0;
+    int contentWidth = 0;
     for (size_t i = 0; i < numChildren; ++i) {
       contentWidth += _children[i]->_bounds.w;
     }
@@ -415,7 +397,8 @@ namespace SGI {
     }
 
     for (size_t i = 0; i < numChildren; ++i) {
-      childRects[i].h = parentHeight > _children[i]->_constraints.height.maxValue ? _children[i]->_constraints.height.maxValue : parentHeight;
+      float preferred = _children[i]->_constraints.height.preferredValue == -1 ? _children[i]->_constraints.height.maxValue : _children[i]->_constraints.height.preferredValue;
+      childRects[i].h = parentHeight > preferred ? preferred : parentHeight < _children[i]->_constraints.height.minValue ? _children[i]->_constraints.height.minValue : parentHeight;
       childRects[i].y = _contentArea.y + (parentHeight - childRects[i].h) / 2;
 
       childRects[i].x = (i == 0)
@@ -436,15 +419,9 @@ namespace SGI {
 
   int Container::_calculateChildrenBoundsColumn()
   {
-    unsigned int parentWidth = _contentArea.w;
-    if (parentWidth < 0) {
-      parentWidth = 0;
-    }
-    unsigned int parentHeight = _contentArea.h;
-    if (parentHeight < 0) {
-      parentHeight = 0;
-    }
-    unsigned int numChildren = _children.size();
+    int parentWidth = _contentArea.w;
+    int parentHeight = _contentArea.h;
+    int numChildren = _children.size();
 
     if (numChildren == 0) {
       return 0;
@@ -550,7 +527,9 @@ namespace SGI {
     }
 
     for (size_t i = 0; i < numChildren; ++i) {
-      childRects[i].w = parentWidth > _children[i]->_constraints.width.maxValue ? _children[i]->_constraints.width.maxValue : parentWidth;
+      int preferred = _children[i]->_constraints.width.preferredValue == -1 ? _children[i]->_constraints.width.maxValue : _children[i]->_constraints.width.preferredValue;
+      preferred = preferred < _children[i]->_constraints.width.minValue ? _children[i]->_constraints.width.minValue : preferred;
+      childRects[i].w = parentWidth > preferred ? preferred : parentWidth < _children[i]->_constraints.width.minValue ? _children[i]->_constraints.width.minValue : parentWidth;
       childRects[i].x = _contentArea.x + (parentWidth - childRects[i].w) / 2;
 
       childRects[i].y = (i == 0)

@@ -238,10 +238,10 @@ namespace SGI {
   void FlatInput::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _textColor = theme.primary.textColor;
-    _borderColor = theme.primary.borderColor;
-    _fillColor = theme.primary.fillColor;
-    _selectColor = theme.primary.textSelectColor;
+    _textColor = theme.colors.textColor;
+    _borderColor = theme.colors.borderColor;
+    _fillColor = theme.colors.fillColor;
+    _selectColor = theme.colors.textSelectColor;
     _updateLabel();
   }
   

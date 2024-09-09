@@ -20,7 +20,7 @@ namespace SGI {
     struct Constraint {
       int minValue = 0;
       int maxValue = std::numeric_limits<int>::max();
-      int preferredValue = 0;
+      int preferredValue = -1;
     };
 
     enum ConstraintType {

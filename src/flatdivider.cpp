@@ -34,6 +34,7 @@ namespace SGI {
   void FlatDivider::setDirection(FlatDivider::Direction direction)
   {
     if (_direction != direction) {
+      _direction = direction;
       if (_direction == Direction::Horizontal) {
         _constraints.width.preferredValue = -1;
         _constraints.height.preferredValue = _size + _padding.top + _padding.bottom;
@@ -41,7 +42,6 @@ namespace SGI {
         _constraints.width.preferredValue = _size + _padding.top + _padding.bottom;
         _constraints.height.preferredValue = -1;
       }
-      _direction = direction;
       _dirty = true;
     }
   }
@@ -49,6 +49,7 @@ namespace SGI {
   void FlatDivider::setSize(int value)
   {
     if (_size != value)  {
+      _size = value;
       if (_direction == Direction::Horizontal) {
         _constraints.width.preferredValue = -1;
         _constraints.height.preferredValue = _size + _padding.top + _padding.bottom;
@@ -56,7 +57,6 @@ namespace SGI {
         _constraints.width.preferredValue = _size + _padding.top + _padding.bottom;
         _constraints.height.preferredValue = -1;
       }
-      _size = value;
       _dirty = true;
     }
   }
@@ -64,7 +64,7 @@ namespace SGI {
   void FlatDivider::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _borderColor = theme.primary.borderColor;
+    _borderColor = theme.colors.borderColor;
   }
   
   void FlatDivider::_render(double deltaTime)
@@ -89,6 +89,7 @@ namespace SGI {
     }
   
     SDL_SetRenderClipRect(getRenderer().get(), &ca);
+    SDL_SetRenderDrawColor(getRenderer().get(), _borderColor.r, _borderColor.g, _borderColor.b, _borderColor.a);
     SDL_RenderFillRect(getRenderer().get(), &line);
     SDL_SetRenderClipRect(getRenderer().get(), nullptr);
 

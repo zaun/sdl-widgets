@@ -110,10 +110,10 @@ namespace SGI {
   void FlatSlider::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _trackBorder = theme.primary.borderColor;
-    _trackFill = theme.primary.fillColor;
-    _handleBorder = theme.primary.accentBorderColor;
-    _handleFill = theme.primary.accentFillColor;
+    _trackBorder = theme.colors.borderColor;
+    _trackFill = theme.colors.fillColor;
+    _handleBorder = theme.colors.accentBorderColor;
+    _handleFill = theme.colors.accentFillColor;
   }
 
   void FlatSlider::setValue(int value)

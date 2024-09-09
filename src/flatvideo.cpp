@@ -82,8 +82,8 @@ namespace SGI {
   void FlatVideo::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _borderColor = theme.primary.borderColor;
-    _fillColor = theme.primary.backgroundColor;
+    _borderColor = theme.colors.borderColor;
+    _fillColor = theme.colors.backgroundColor;
   }
 
   void FlatVideo::_cleanup()

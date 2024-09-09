@@ -26,6 +26,11 @@ namespace SGI {
     return widget;
   }
 
+  FlatText::FlatText()
+  {
+    _resourcePath = SDL_GetBasePath();
+  }
+
   FlatText::~FlatText()
   {
     for (auto& line : _lineTextures) {
@@ -70,6 +75,38 @@ namespace SGI {
     return Widget::processEvent(event);
   }
 
+  bool FlatText::loadFile(std::string filename)
+  {
+    std::string fullPath = _resourcePath + filename;
+
+    SDL_IOStream* file = SDL_IOFromFile(fullPath.c_str(), "r");
+    if (file == nullptr) {
+      LOG(FLATTEXT, "Error: Unable to open file %s: %s", fullPath.c_str(), SDL_GetError());
+      return false;
+    }
+
+    Sint64 fileSize = SDL_GetIOSize(file);
+    if (fileSize <= 0) {
+      LOG(FLATTEXT, "Error: Unable to determine file size: %s", SDL_GetError());
+      SDL_CloseIO(file);
+      return false;
+    }
+
+    std::string fileContent;
+    fileContent.resize(fileSize);
+
+    Sint64 bytesRead = SDL_ReadIO(file, &fileContent[0], fileSize);
+    if (bytesRead != fileSize) {
+      LOG(FLATTEXT, "Error: File read error: %s", SDL_GetError());
+      SDL_CloseIO(file);
+      return false;
+    }
+
+      SDL_CloseIO(file);
+      setValue(fileContent);
+      return true;
+  };
+
   void FlatText::setFontName(const std::string& fontName)
   {
     _fontName = fontName;
@@ -85,6 +122,14 @@ namespace SGI {
     }
     _updateContent();
   }
+
+  void FlatText::setResourcePath(std::string path) {
+    _resourcePath = path;
+    if (_resourcePath.empty() || _resourcePath.back() == '/') {
+      _resourcePath += "/";
+    }
+  }
+
   void FlatText::setValue(const std::string& value)
   {
     if (_value != value) {
@@ -97,7 +142,7 @@ namespace SGI {
   void FlatText::setTheme(std::string name)
   {
     Flat::Theme theme = _getTheme(name);
-    _textColor = theme.primary.textColor;
+    _textColor = theme.colors.textColor;
     _createTokens(_value, _textColor, {0, 0, 0, 0}, _fontName, _fontSize);
     _updateContent();
   }
@@ -284,6 +329,8 @@ namespace SGI {
     }
     _lineTextures.clear();
 
+    _constraints.height.preferredValue = -1;
+
     // Run through the tokens createing textures
     // splitting up tokes as need for line wrapping
     std::vector<DisplayTextures> currentLine;
@@ -327,6 +374,7 @@ namespace SGI {
                 if (currentLineWidth + tokenWidth > getContentArea().w && !currentLine.empty()) {
                   _lineTextures.push_back(currentLine);
                   _totalHeight += currentLineMaxHeight;
+                  currentLineMaxHeight = 0;
                   currentLine.clear();
                   currentLineWidth = 0;
                 }
@@ -354,6 +402,7 @@ namespace SGI {
               if (isLineOrParagraphSeparator) {
                 _lineTextures.push_back(currentLine);
                 _totalHeight += currentLineMaxHeight;
+                currentLineMaxHeight = 0;
                 currentLine.clear();
                 currentLineWidth = 0;
               } else {
@@ -364,6 +413,7 @@ namespace SGI {
                     currentLineMaxHeight = tokenHeight;
                   }
                   _totalHeight += currentLineMaxHeight;
+                  currentLineMaxHeight = 0;
                   currentLine.clear();
                   currentLineWidth = 0;
                 }
@@ -392,14 +442,20 @@ namespace SGI {
         // Process any remaining chunk
         if (!chunk.empty()) {
           FontBook::measure(token.fontName, token.fontPoints, chunk, &tokenWidth, &tokenHeight);
+
           if (currentLineWidth + tokenWidth > getContentArea().w && !currentLine.empty()) {
             _lineTextures.push_back(currentLine);
             if (tokenHeight > currentLineMaxHeight) {
               currentLineMaxHeight = tokenHeight;
             }
             _totalHeight += currentLineMaxHeight;
+            currentLineMaxHeight = 0;
             currentLine.clear();
             currentLineWidth = 0;
+          }
+
+          if (tokenHeight > currentLineMaxHeight) {
+            currentLineMaxHeight = tokenHeight;
           }
 
           // LOG(FLATTEXT, "%zu, [%s]", chunk.size(), chunk.c_str());
@@ -422,6 +478,9 @@ namespace SGI {
     if (!currentLine.empty()) {
       _lineTextures.push_back(currentLine);
       _totalHeight += currentLineMaxHeight;
+      LOG(FLATEXT, "Current Line Height: %d %d", currentLineMaxHeight, _totalHeight);
     }
+
+    _constraints.height.preferredValue = _totalHeight + _padding.top + _padding.bottom;
   }
 }

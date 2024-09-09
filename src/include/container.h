@@ -86,6 +86,11 @@ namespace SGI {
      */
     virtual void removeChild(WidgetPtr widget);
 
+    /**
+     * Remove all child widgets
+     */
+    virtual void removeAll();
+
     void setConstraint(Widget::ConstraintType constraint, int minValue, int maxValue) override;
 
     void setConstraint(Container::ConstraintType constraint, int minValue, int maxValue);
